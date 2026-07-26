@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,10 +58,11 @@ fun ItemBookListView(book: Book, onClick: () -> Unit) {
                 contentDescription = "Book Cover",
                 placeholder = painterResource(R.drawable.ic_launcher_background),
                 error = painterResource(R.drawable.ic_launcher_background),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .height(96.dp)
                     .width(66.dp)
-                    .clip(MaterialTheme.shapes.extraSmall)
+                    .clip(MaterialTheme.shapes.small)
             )
         }
 

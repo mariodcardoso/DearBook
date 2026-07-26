@@ -70,8 +70,10 @@ fun BookDetailsContent(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(Spacing.screenHorizontal),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(Spacing.screenHorizontal)
+                .verticalScroll(rememberScrollState()),
+
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
             when (uiState) {
@@ -127,9 +129,7 @@ fun BookDetailsContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState()),
-                    ) {
+                    Column {
 
                         Text(
                             text = "Synopsis", color = MaterialTheme.colorScheme.onSurfaceVariant
