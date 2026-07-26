@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "504810017728",
+    "firebase_url": "https://dearbook-f66ed-default-rtdb.firebaseio.com",
+    "project_id": "dearbook-f66ed",
+    "storage_bucket": "dearbook-f66ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504810017728:android:dff30978d13f80ed9c2e25",
+        "android_client_info": {
+          "package_name": "br.com.mariodias.dearbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "504810017728-0655r53rpjcbqtjt6ien8e6g3pcoq059.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO5RkVryfMawE09HX06yB5ZWiFAhaqpCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "504810017728-0655r53rpjcbqtjt6ien8e6g3pcoq059.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
