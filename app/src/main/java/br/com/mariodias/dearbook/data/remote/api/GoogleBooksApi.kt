@@ -9,7 +9,7 @@ interface GoogleBooksApi {
 
     @GET("volumes")
     suspend fun getBookList(
-        @Query("q") title: String,
+        @Query("q") query: String,
         @Query("key") apiKey: String = BuildConfig.GOOGLE_BOOKS_API_KEY
     ): BookResponseDto
 
