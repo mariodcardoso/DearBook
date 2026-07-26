@@ -29,6 +29,12 @@ val ManropeFontFamily = FontFamily(
 )
 // Set of Material typography styles to start with
 val Typography = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = LoraFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 32.sp,
+        lineHeight = 40.sp
+    ),
     headlineSmall = TextStyle(
         fontFamily = LoraFontFamily,
         fontWeight = FontWeight.Medium,

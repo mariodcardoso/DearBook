@@ -2,6 +2,7 @@ package br.com.mariodias.dearbook.presentation.searchbook
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,11 +33,12 @@ import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
 
 @Composable
-fun ItemBookListView(book: Book) {
+fun ItemBookListView(book: Book, onClick: () -> Unit) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = MaterialTheme.shapes.medium
@@ -57,15 +58,15 @@ fun ItemBookListView(book: Book) {
                 placeholder = painterResource(R.drawable.ic_launcher_background),
                 error = painterResource(R.drawable.ic_launcher_background),
                 modifier = Modifier
-                    .height(64.dp)
-                    .width(44.dp)
+                    .height(96.dp)
+                    .width(66.dp)
                     .clip(MaterialTheme.shapes.extraSmall)
             )
         }
 
         Column(
             modifier = Modifier
-                .padding(start = Spacing.sm)
+                .padding(horizontal = Spacing.sm)
                 .weight(1f)
         ) {
             Text(
@@ -115,6 +116,7 @@ private fun ItemBookListViewPreview() {
                 pageCount = 296,
                 bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
             )
-        )
+        ),
+        onClick = {}
     )
 }

@@ -79,7 +79,8 @@ private val fakeBooks = listOf(
 @Composable
 fun SearchBooksScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchBookViewModel = hiltViewModel()
+    viewModel: SearchBookViewModel = hiltViewModel(),
+    onBookClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
@@ -89,14 +90,20 @@ fun SearchBooksScreen(
         uiState = uiState,
         query = query,
         onQueryChange = viewModel::onQueryChange,
-        onSearch = viewModel::onSearch
+        onSearch = viewModel::onSearch,
+        onBookClick = onBookClick
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SearchBookContentSuccessPreview() {
-    SearchBookContent(uiState = SearchBookUiState.Success(fakeBooks))
+    SearchBookContent(
+        uiState = SearchBookUiState.Success(fakeBooks),
+        onBookClick = {}
+
+
+    )
 }
 
 @Preview(showBackground = true)
@@ -106,7 +113,8 @@ fun SearchBookContent(
     uiState: SearchBookUiState = SearchBookUiState.Idle,
     query: String = "",
     onQueryChange: (String) -> Unit = {},
-    onSearch: () -> Unit = {}
+    onSearch: () -> Unit = {},
+    onBookClick: (String) -> Unit
 ) {
 
     Scaffold(
@@ -115,14 +123,13 @@ fun SearchBookContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Buscar livro",
+                        text = "Search books",
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
-                ),
-                windowInsets = WindowInsets(0, 0, 0, 0)
+                )
             )
         }
     ) { innerPadding ->
@@ -176,7 +183,7 @@ fun SearchBookContent(
                         verticalArrangement = Arrangement.spacedBy(Spacing.cardGap)
                     ) {
                         items(uiState.bookList, key = { it.id }) { book ->
-                            ItemBookListView(book)
+                            ItemBookListView(book, onClick = { onBookClick(book.id)})
                         }
                     }
                 }

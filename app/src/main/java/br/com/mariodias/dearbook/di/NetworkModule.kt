@@ -32,6 +32,7 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
         return OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor())
             .addInterceptor(logging)
             .build()
     }

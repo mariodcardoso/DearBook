@@ -1,5 +1,6 @@
 package br.com.mariodias.dearbook.data.repository
 
+import androidx.core.text.HtmlCompat
 import br.com.mariodias.dearbook.data.remote.api.GoogleBooksApi
 import br.com.mariodias.dearbook.data.remote.dto.BookCoverDto
 import br.com.mariodias.dearbook.data.remote.dto.BookDto
@@ -18,6 +19,10 @@ class BookRepositoryImpl @Inject constructor(
 
     override suspend fun searchBooks(title: String): BookResponse {
         return api.getBookList(title).toDomain()
+    }
+
+    override suspend fun fetchBookDetails(id: String): Book {
+        return api.getBookDetails(id).toDomain()
     }
 }
 
@@ -40,7 +45,10 @@ fun VolumeInfoDto.toDomain(): VolumeInfo {
         title = title ?: "",
         subtitle = subtitle ?: "",
         authors = authors ?: emptyList(),
-        description = description,
+        description = HtmlCompat.fromHtml(
+            description ?: "",
+            HtmlCompat.FROM_HTML_MODE_LEGACY
+        ).toString(),
         pageCount = pageCount ?: 0,
         bookCover = bookCover.toDomain()
     )
