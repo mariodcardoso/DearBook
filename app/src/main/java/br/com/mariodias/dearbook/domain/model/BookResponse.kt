@@ -19,7 +19,7 @@ data class Book(
 data class VolumeInfo(
     val title: String,
     val subtitle: String,
-    val authors: List<String>,
+    val authors: List<String>? = listOf<String>("Author Unknowledge"),
     val description: String? = "",
     val pageCount: Int,
     val bookCover: BookCover

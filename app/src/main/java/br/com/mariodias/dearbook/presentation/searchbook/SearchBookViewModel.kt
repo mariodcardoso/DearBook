@@ -1,6 +1,5 @@
 package br.com.mariodias.dearbook.presentation.searchbook
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.mariodias.dearbook.domain.model.Book
@@ -20,23 +19,33 @@ class SearchBookViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<SearchBookUiState>(SearchBookUiState.Idle)
     val uiState: StateFlow<SearchBookUiState> = _uiState.asStateFlow()
 
-    init {
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
+
+    fun onQueryChange(newQuery: String) {
+        _query.value = newQuery
+    }
+
+    fun onSearch() {
+        val currentQuery = _query.value
+        if (currentQuery.isBlank()) return
+
         viewModelScope.launch {
             _uiState.value = SearchBookUiState.Loading
 
             try {
-                val bookList = repository.searchBooks("Ikigai").items
+                val bookList = repository.searchBooks(currentQuery).items
 
-                _uiState.value = SearchBookUiState.Success(bookList)
+                _uiState.value = if (bookList.isEmpty()) {
+                    SearchBookUiState.EmptyList
+                } else {
+                    SearchBookUiState.Success(bookList)
+                }
             } catch (e: Exception) {
-
+                _uiState.value = SearchBookUiState.EmptyList
             }
-
-
         }
     }
-
-
 }
 
 
@@ -44,4 +53,5 @@ sealed interface SearchBookUiState {
     object Idle : SearchBookUiState
     object Loading : SearchBookUiState
     data class Success(val bookList: List<Book>) : SearchBookUiState
+    object EmptyList : SearchBookUiState
 }
