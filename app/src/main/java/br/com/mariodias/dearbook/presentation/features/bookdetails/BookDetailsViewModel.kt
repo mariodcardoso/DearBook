@@ -1,11 +1,13 @@
-package br.com.mariodias.dearbook.presentation.bookdetails
+package br.com.mariodias.dearbook.presentation.features.bookdetails
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import br.com.mariodias.dearbook.data.Resource
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.domain.repository.BookRepository
+import br.com.mariodias.dearbook.presentation.navigation.BookDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +24,7 @@ class BookDetailsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<BookDetailsUiState>(BookDetailsUiState.Loading)
     val uiState: StateFlow<BookDetailsUiState> = _uiState.asStateFlow()
 
-    private val bookId: String = checkNotNull(savedStateHandle["bookId"])
+    private val bookId = savedStateHandle.toRoute<BookDetails>().bookId
 
     init {
         viewModelScope.launch {

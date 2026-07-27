@@ -2,31 +2,40 @@ package br.com.mariodias.dearbook.presentation.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.compose.composable
-import br.com.mariodias.dearbook.presentation.bookdetails.BookDetailsScreen
-import br.com.mariodias.dearbook.presentation.searchbook.SearchBooksScreen
+import androidx.navigation.compose.rememberNavController
+import br.com.mariodias.dearbook.presentation.features.bookdetails.BookDetailsScreen
+import br.com.mariodias.dearbook.presentation.features.home.HomeScreen
+import br.com.mariodias.dearbook.presentation.features.library.LibraryScreen
+import br.com.mariodias.dearbook.presentation.features.searchbook.SearchBooksScreen
+import br.com.mariodias.dearbook.presentation.features.settings.SettingsScreen
+import br.com.mariodias.dearbook.presentation.features.statistics.StatisticsScreen
 
 
 @Composable
 fun DearBookNavHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier
 ) {
-    NavHost(navController = navController, startDestination = "search") {
-        composable("search") {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = Home
+    ) {
+        composable<Home> { HomeScreen() }
+        composable<Library> { LibraryScreen() }
+        composable<Statistics> { StatisticsScreen() }
+        composable<Settings> { SettingsScreen() }
+
+        composable<Search> {
             SearchBooksScreen(
-                onBookClick = { bookId -> navController.navigate("bookDetails/$bookId") }
+                onBookClick = { bookId -> navController.navigate(BookDetails(bookId)) }
             )
         }
-        composable(
-            route = "bookDetails/{bookId}",
-            arguments = listOf(navArgument("bookId") { type = NavType.StringType })
-        ) {
-            BookDetailsScreen()
-        }
+
+        composable<BookDetails> { BookDetailsScreen() }
     }
 }

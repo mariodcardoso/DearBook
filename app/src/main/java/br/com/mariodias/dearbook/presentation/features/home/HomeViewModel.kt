@@ -1,4 +1,4 @@
-package br.com.mariodias.dearbook.presentation.home
+package br.com.mariodias.dearbook.presentation.features.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,8 +10,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState.Idle)
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState.Idle)
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
 
 
@@ -19,6 +19,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 }
 
 
-sealed interface UiState {
-    object Idle : UiState
+sealed interface HomeUiState {
+    object Idle : HomeUiState
 }

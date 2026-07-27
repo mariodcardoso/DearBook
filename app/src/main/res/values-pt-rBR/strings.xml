@@ -10,4 +10,9 @@
     <string name="add_to_library_button">+ Adicionar à Biblioteca</string>
     <string name="synopsis_label">Sinopse</string>
     <string name="page_count">%1$d páginas</string>
+    <string name="nav_home">Início</string>
+    <string name="nav_library">Estante</string>
+    <string name="nav_statistics">Estatísticas</string>
+    <string name="nav_settings">Configurações</string>
+    <string name="search_action_description">Buscar</string>
 </resources>

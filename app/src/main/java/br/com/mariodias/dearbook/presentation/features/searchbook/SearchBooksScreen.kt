@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package br.com.mariodias.dearbook.presentation.searchbook
+package br.com.mariodias.dearbook.presentation.features.searchbook
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

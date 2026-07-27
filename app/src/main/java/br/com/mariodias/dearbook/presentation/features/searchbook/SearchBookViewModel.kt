@@ -1,4 +1,4 @@
-package br.com.mariodias.dearbook.presentation.searchbook
+package br.com.mariodias.dearbook.presentation.features.searchbook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
