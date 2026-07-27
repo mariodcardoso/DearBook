@@ -26,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
@@ -58,7 +60,8 @@ fun BookDetailsContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Books details", style = MaterialTheme.typography.headlineSmall
+                        text = stringResource(R.string.book_details_title),
+                        style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -114,7 +117,7 @@ fun BookDetailsContent(
                     )
 
                     Text(
-                        text = "${uiState.book.pageCount} pages",
+                        text = stringResource(R.string.page_count, uiState.book.pageCount),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -124,7 +127,7 @@ fun BookDetailsContent(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {}
                     ) {
-                        Text(text = "+ Add to Library")
+                        Text(text = stringResource(R.string.add_to_library_button))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +135,8 @@ fun BookDetailsContent(
                     Column {
 
                         Text(
-                            text = "Synopsis", color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = stringResource(R.string.synopsis_label),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -143,7 +147,7 @@ fun BookDetailsContent(
                     }
                 }
 
-
+                is BookDetailsUiState.Error -> {}
             }
 
         }

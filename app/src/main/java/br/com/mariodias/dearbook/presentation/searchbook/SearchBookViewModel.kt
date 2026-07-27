@@ -2,6 +2,7 @@ package br.com.mariodias.dearbook.presentation.searchbook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.mariodias.dearbook.data.Resource
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.repository.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,25 +34,29 @@ class SearchBookViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = SearchBookUiState.Loading
 
-            try {
-                val bookList = repository.searchBooks(currentQuery).items
+            when (val result = repository.searchBooks(currentQuery)) {
 
-                _uiState.value = if (bookList.isEmpty()) {
-                    SearchBookUiState.EmptyList
-                } else {
-                    SearchBookUiState.Success(bookList)
+                is Resource.Success -> {
+                    val bookList = result.response.items
+                    _uiState.value = if (bookList.isEmpty()) {
+                        SearchBookUiState.EmptyList
+                    } else {
+                        SearchBookUiState.Success(bookList)
+                    }
                 }
-            } catch (e: Exception) {
-                _uiState.value = SearchBookUiState.EmptyList
+
+                is Resource.Error -> {
+                    SearchBookUiState.Error(result.exception.message.toString())
+                }
             }
         }
     }
 }
-
 
 sealed interface SearchBookUiState {
     object Idle : SearchBookUiState
     object Loading : SearchBookUiState
     data class Success(val bookList: List<Book>) : SearchBookUiState
     object EmptyList : SearchBookUiState
+    data class Error(val errorMessage: String) : SearchBookUiState
 }

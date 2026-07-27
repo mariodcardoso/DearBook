@@ -3,6 +3,7 @@ package br.com.mariodias.dearbook.presentation.bookdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import br.com.mariodias.dearbook.data.Resource
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.domain.repository.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,12 +27,14 @@ class BookDetailsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
 
-            try {
-                val bookDetails = repository.fetchBookDetails(bookId)
-                _uiState.value = BookDetailsUiState.Success(bookDetails.volumeInfo)
+            when (val result = repository.fetchBookDetails(bookId)) {
+                is Resource.Success -> {
+                    _uiState.value = BookDetailsUiState.Success(result.response.volumeInfo)
+                }
 
-            } catch (e: Exception) {
-
+                is Resource.Error -> {
+                    BookDetailsUiState.Error(result.exception.message.toString())
+                }
             }
         }
     }
@@ -40,4 +43,5 @@ class BookDetailsViewModel @Inject constructor(
 sealed interface BookDetailsUiState {
     object Loading : BookDetailsUiState
     data class Success(val book: VolumeInfo) : BookDetailsUiState
+    data class Error(val errorMessage: String) : BookDetailsUiState
 }

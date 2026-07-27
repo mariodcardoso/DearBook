@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.mariodias.dearbook.R
@@ -55,7 +56,7 @@ fun ItemBookListView(book: Book, onClick: () -> Unit) {
         Column {
             AsyncImage(
                 model = book.volumeInfo.bookCover.thumbnail,
-                contentDescription = "Book Cover",
+                contentDescription = stringResource(R.string.book_cover_description),
                 placeholder = painterResource(R.drawable.ic_launcher_background),
                 error = painterResource(R.drawable.ic_launcher_background),
                 contentScale = ContentScale.Crop,
@@ -97,7 +98,7 @@ fun ItemBookListView(book: Book, onClick: () -> Unit) {
         ) {
             Icon(
                 Icons.Default.Add,
-                contentDescription = "Adicionar à biblioteca",
+                contentDescription = stringResource(R.string.add_to_library_description),
                 modifier = Modifier.size(16.dp)
             )
         }

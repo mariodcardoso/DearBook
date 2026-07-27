@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_screen_title">Buscar livros</string>
+    <string name="search_placeholder">Busque por título, autor, ISBN...</string>
+    <string name="search_idle_hint">Digite algo para buscar um livro</string>
+    <string name="search_empty_list">Nenhum resultado encontrado</string>
+    <string name="book_details_title">Detalhes do livro</string>
+    <string name="book_cover_description">Capa do livro</string>
+    <string name="add_to_library_description">Adicionar à biblioteca</string>
+    <string name="add_to_library_button">+ Adicionar à Biblioteca</string>
+    <string name="synopsis_label">Sinopse</string>
+    <string name="page_count">%1$d páginas</string>
+</resources>

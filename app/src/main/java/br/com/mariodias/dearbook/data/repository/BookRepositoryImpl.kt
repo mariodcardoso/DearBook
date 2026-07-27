@@ -1,6 +1,7 @@
 package br.com.mariodias.dearbook.data.repository
 
 import androidx.core.text.HtmlCompat
+import br.com.mariodias.dearbook.data.Resource
 import br.com.mariodias.dearbook.data.remote.api.GoogleBooksApi
 import br.com.mariodias.dearbook.data.remote.dto.BookCoverDto
 import br.com.mariodias.dearbook.data.remote.dto.BookDto
@@ -17,12 +18,20 @@ class BookRepositoryImpl @Inject constructor(
     private val api: GoogleBooksApi
 ) : BookRepository {
 
-    override suspend fun searchBooks(title: String): BookResponse {
-        return api.getBookList(title).toDomain()
+    override suspend fun searchBooks(title: String): Resource<BookResponse> {
+        return try {
+            Resource.Success(api.getBookList(title).toDomain())
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
-    override suspend fun fetchBookDetails(id: String): Book {
-        return api.getBookDetails(id).toDomain()
+    override suspend fun fetchBookDetails(id: String): Resource<Book> {
+        return try {
+            Resource.Success(api.getBookDetails(id).toDomain())
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 }
 

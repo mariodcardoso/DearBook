@@ -5,7 +5,6 @@ package br.com.mariodias.dearbook.presentation.searchbook
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,11 +30,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
@@ -106,7 +108,6 @@ private fun SearchBookContentSuccessPreview() {
     )
 }
 
-@Preview(showBackground = true)
 @Composable
 fun SearchBookContent(
     modifier: Modifier = Modifier,
@@ -123,7 +124,7 @@ fun SearchBookContent(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Search books",
+                        text = stringResource(R.string.search_screen_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
@@ -139,11 +140,13 @@ fun SearchBookContent(
                 .fillMaxSize()
                 .padding(horizontal = Spacing.screenHorizontal)
         ) {
+            val keyboardController = LocalSoftwareKeyboardController.current
+
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = query,
                 onValueChange = onQueryChange,
-                placeholder = { Text(text = "Search for Title, Author, ISBN...") },
+                placeholder = { Text(text = stringResource(R.string.search_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
@@ -154,14 +157,17 @@ fun SearchBookContent(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearch() })
+                keyboardActions = KeyboardActions(onSearch = {
+                    onSearch()
+                    keyboardController?.hide()
+                })
             )
 
             when (uiState) {
                 SearchBookUiState.Idle -> {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Text(
-                            text = "Digite algo para buscar um livro",
+                            text = stringResource(R.string.search_idle_hint),
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
@@ -189,8 +195,10 @@ fun SearchBookContent(
                 }
 
                 SearchBookUiState.EmptyList -> {
-                    Text(text = "Lista Vazia")
+                    Text(text = stringResource(R.string.search_empty_list))
                 }
+
+                is SearchBookUiState.Error -> {}
             }
 
         }
