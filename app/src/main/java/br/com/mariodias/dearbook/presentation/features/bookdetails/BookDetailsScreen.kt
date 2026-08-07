@@ -41,18 +41,25 @@ import coil3.compose.AsyncImage
 
 @Composable
 fun BookDetailsScreen(
-    modifier: Modifier = Modifier, viewModel: BookDetailsViewModel = hiltViewModel()
+    modifier: Modifier = Modifier,
+    viewModel: BookDetailsViewModel = hiltViewModel()
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    BookDetailsContent(modifier, uiState)
+    BookDetailsContent(
+        modifier,
+        uiState,
+        onAddToLibraryClick = { viewModel.addToLibrary() }
+    )
 
 }
 
 @Composable
 fun BookDetailsContent(
-    modifier: Modifier = Modifier, uiState: BookDetailsUiState
+    modifier: Modifier = Modifier,
+    uiState: BookDetailsUiState,
+    onAddToLibraryClick: () -> Unit,
 ) {
 
     Scaffold(
@@ -125,7 +132,7 @@ fun BookDetailsContent(
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = {}
+                        onClick = onAddToLibraryClick
                     ) {
                         Text(text = stringResource(R.string.add_to_library_button))
                     }
@@ -170,7 +177,8 @@ fun SearchBookContentSuccessPreview() {
     )
 
     BookDetailsContent(
-        uiState = BookDetailsUiState.Success(fakeBook.volumeInfo)
+        uiState = BookDetailsUiState.Success(fakeBook.volumeInfo),
+        onAddToLibraryClick = {}
     )
 }
 

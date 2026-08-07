@@ -26,7 +26,11 @@ fun DearBookNavHost(
         startDestination = Home
     ) {
         composable<Home> { HomeScreen() }
-        composable<Library> { LibraryScreen() }
+        composable<Library> {
+            LibraryScreen(
+                onBookClick = { bookId -> navController.navigate(BookDetails(bookId)) }
+            )
+        }
         composable<Statistics> { StatisticsScreen() }
         composable<Settings> { SettingsScreen() }
 

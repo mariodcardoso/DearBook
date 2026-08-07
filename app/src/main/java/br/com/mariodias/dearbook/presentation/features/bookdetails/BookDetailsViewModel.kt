@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import br.com.mariodias.dearbook.data.Resource
+import br.com.mariodias.dearbook.domain.model.Book
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.domain.repository.BookRepository
+import br.com.mariodias.dearbook.domain.repository.LibraryRepository
 import br.com.mariodias.dearbook.presentation.navigation.BookDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
-    private val repository: BookRepository,
+    private val bookRepository: BookRepository,
+    private val libraryRepository: LibraryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -28,17 +32,31 @@ class BookDetailsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-
-            when (val result = repository.fetchBookDetails(bookId)) {
+            when (val result = bookRepository.fetchBookDetails(bookId)) {
                 is Resource.Success -> {
                     _uiState.value = BookDetailsUiState.Success(result.response.volumeInfo)
                 }
 
                 is Resource.Error -> {
-                    BookDetailsUiState.Error(result.exception.message.toString())
+                    _uiState.value = BookDetailsUiState.Error(result.exception.message.toString())
                 }
             }
         }
+    }
+
+    fun addToLibrary() {
+        val currentState = uiState.value
+
+        if (currentState !is BookDetailsUiState.Success) return
+
+        viewModelScope.launch {
+            libraryRepository.saveBook(
+                Book(bookId, currentState.book),
+                BookReadingStatus.TO_READ
+            )
+        }
+
+
     }
 }
 
