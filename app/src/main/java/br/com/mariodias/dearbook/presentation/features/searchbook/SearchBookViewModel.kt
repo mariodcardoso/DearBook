@@ -46,7 +46,7 @@ class SearchBookViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    SearchBookUiState.Error(result.exception.message.toString())
+                    _uiState.value = SearchBookUiState.Error(result.exception.message.toString())
                 }
             }
         }

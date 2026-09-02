@@ -59,7 +59,7 @@ fun VolumeInfoDto.toDomain(): VolumeInfo {
             HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString(),
         pageCount = pageCount ?: 0,
-        bookCover = bookCover.toDomain()
+        bookCover = bookCover?.toDomain() ?: BookCover("")
     )
 }
 

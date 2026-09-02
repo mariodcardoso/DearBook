@@ -40,7 +40,7 @@ data class VolumeInfoDto(
     val pageCount: Int? = 0,
 
     @SerialName("imageLinks")
-    val bookCover: BookCoverDto
+    val bookCover: BookCoverDto? = BookCoverDto()
 )
 
 @Serializable

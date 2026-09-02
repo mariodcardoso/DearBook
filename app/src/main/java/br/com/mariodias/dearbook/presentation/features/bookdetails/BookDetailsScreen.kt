@@ -2,6 +2,8 @@
 
 package br.com.mariodias.dearbook.presentation.features.bookdetails
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,6 +64,7 @@ fun BookDetailsContent(
     uiState: BookDetailsUiState,
     onAddToLibraryClick: () -> Unit,
 ) {
+    val context = LocalContext.current
 
     Scaffold(
         modifier = modifier, topBar = {
