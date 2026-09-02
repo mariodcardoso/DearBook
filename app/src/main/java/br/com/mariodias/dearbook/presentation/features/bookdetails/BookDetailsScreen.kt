@@ -2,34 +2,50 @@
 
 package br.com.mariodias.dearbook.presentation.features.bookdetails
 
-import android.content.Context
-import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
@@ -64,7 +81,8 @@ fun BookDetailsContent(
     uiState: BookDetailsUiState,
     onAddToLibraryClick: () -> Unit,
 ) {
-    val context = LocalContext.current
+
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier, topBar = {
@@ -108,7 +126,7 @@ fun BookDetailsContent(
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .height(280.dp)
-                            .width(192.dp)
+                            .width(208.dp)
                             .clip(MaterialTheme.shapes.large)
                     )
 
@@ -136,7 +154,9 @@ fun BookDetailsContent(
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = onAddToLibraryClick
+                        onClick = {
+                            showBottomSheet = true
+                        }
                     ) {
                         Text(text = stringResource(R.string.add_to_library_button))
                     }
@@ -159,6 +179,29 @@ fun BookDetailsContent(
                 }
 
                 is BookDetailsUiState.Error -> {}
+            }
+
+        }
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+        ) {
+
+            Column(
+                Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Reading Status",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontWeight = FontWeight.Bold
+                )
+
+                BookReadingStatus.entries.forEach {
+                    ItemBottomSheetView(it.name, it.color)
+                }
             }
 
         }
@@ -186,3 +229,43 @@ fun SearchBookContentSuccessPreview() {
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ItemBottomSheetView(readingStatus: String = "To Read", readingStatusColor: Color = Color.Blue) {
+
+    Row(
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp))
+            .background(readingStatusColor.copy(alpha = 0.1f))
+            .border(1.dp, readingStatusColor, shape = RoundedCornerShape(15.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(color = readingStatusColor.copy(alpha = 0.7f)),
+                onClick = {}
+            )
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+
+        Icon(
+            imageVector = Icons.Filled.Bookmark,
+            contentDescription = null,
+            modifier = Modifier.size(36.dp),
+            tint = readingStatusColor
+        )
+
+        Text(
+            text = readingStatus,
+            style = MaterialTheme.typography.titleMedium,
+        )
+
+        Icon(
+            imageVector = Icons.Filled.CheckCircle,
+            contentDescription = null,
+            tint = readingStatusColor
+        )
+    }
+}
