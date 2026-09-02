@@ -16,7 +16,6 @@ class LibraryViewModel @Inject constructor(
     libraryRepository: LibraryRepository
 ) : ViewModel() {
 
-
     val uiState: StateFlow<LibraryUiState> = libraryRepository.getAll().map { books ->
         if (books.isEmpty()) LibraryUiState.Empty else LibraryUiState.Success(books)
     }.stateIn(

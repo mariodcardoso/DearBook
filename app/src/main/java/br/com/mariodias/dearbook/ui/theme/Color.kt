@@ -12,5 +12,4 @@ val Border = Color(0xFFE7E2D2)
 val Momiji = Color(0xFFC1440E)
 val Asagi = Color(0xFF6E9C9E)
 
-// reservado — ainda sem consumidor, não plugado no ColorScheme
-val Take = Color(0xFF4B6B3A)
+val Ai = Color(0xFF6B84A3)

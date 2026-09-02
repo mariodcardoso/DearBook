@@ -1,16 +1,21 @@
 package br.com.mariodias.dearbook.presentation.features.library
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
@@ -28,15 +33,27 @@ fun ItemLibraryBookView(libraryBook: LibraryBook) {
 @Composable
 fun ItemLibraryBookViewContent(libraryBook: LibraryBook) {
 
-    AsyncImage(
-        model = libraryBook.book.volumeInfo.bookCover.thumbnail,
-        contentDescription = libraryBook.book.volumeInfo.title,
-        contentScale = ContentScale.FillBounds,
-        modifier = Modifier
-            .height(150.dp)
-            .width(66.dp)
-            .clip(MaterialTheme.shapes.small)
-    )
+    Box() {
+        AsyncImage(
+            model = libraryBook.book.volumeInfo.bookCover.thumbnail,
+            contentDescription = libraryBook.book.volumeInfo.title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .aspectRatio(2f / 3f)
+                .clip(RoundedCornerShape(8.dp))
+        )
+
+        Icon(
+            imageVector = Icons.Filled.Bookmark,
+            contentDescription = null,
+            tint = libraryBook.readingStatus.color,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .size(36.dp)
+                .offset(x = (-3).dp, y = (-7).dp)
+        )
+
+    }
 }
 
 @Preview(showBackground = true)

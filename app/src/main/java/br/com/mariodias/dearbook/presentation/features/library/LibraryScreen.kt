@@ -13,9 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.mariodias.dearbook.domain.model.Book
+import br.com.mariodias.dearbook.domain.model.BookCover
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
+import br.com.mariodias.dearbook.domain.model.LibraryBook
+import br.com.mariodias.dearbook.domain.model.VolumeInfo
 
 @Composable
 fun LibraryScreen(
@@ -64,4 +70,68 @@ fun LibraryContent(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LibraryContentSuccessPreview() {
+
+    val books = listOf(
+        LibraryBook(
+            book = Book(
+                id = "1",
+                volumeInfo = VolumeInfo(
+                    title = "Norwegian Wood",
+                    subtitle = "",
+                    pageCount = 296,
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                )
+            ),
+            readingStatus = BookReadingStatus.TO_READ,
+            addedAt = 0L
+        ),
+        LibraryBook(
+            book = Book(
+                id = "2",
+                volumeInfo = VolumeInfo(
+                    title = "Norwegian Wood",
+                    subtitle = "",
+                    pageCount = 296,
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                )
+            ),
+            readingStatus = BookReadingStatus.READING,
+            addedAt = 0L
+        ),
+        LibraryBook(
+            book = Book(
+                id = "3",
+                volumeInfo = VolumeInfo(
+                    title = "Norwegian Wood",
+                    subtitle = "",
+                    pageCount = 296,
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                )
+            ),
+            readingStatus = BookReadingStatus.READ,
+            addedAt = 0L
+        ),
+        LibraryBook(
+            book = Book(
+                id = "4",
+                volumeInfo = VolumeInfo(
+                    title = "Norwegian Wood",
+                    subtitle = "",
+                    pageCount = 296,
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                )
+            ),
+            readingStatus = BookReadingStatus.READING,
+            addedAt = 0L
+        )
+    )
+
+    LibraryContent(Modifier, LibraryUiState.Success(books), onBookClick = {})
+
+
 }
