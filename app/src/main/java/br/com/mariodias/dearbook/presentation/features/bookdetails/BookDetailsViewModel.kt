@@ -70,10 +70,15 @@ class BookDetailsViewModel @Inject constructor(
     }
 
     fun onRemoveBookFromLibraryClick(){
+        val currentState = uiState.value
+        if (currentState !is BookDetailsUiState.Success) return
+
         viewModelScope.launch {
-            libraryRepository.getById(bookId)?.let {
-                libraryRepository.removeBook(it)
+            libraryRepository.getById(bookId)?.let { bookId ->
+                libraryRepository.removeBook(bookId)
             }
+            _uiState.value = BookDetailsUiState.Success(currentState.book, null, false)
+
         }
     }
 }

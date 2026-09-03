@@ -21,13 +21,13 @@ class LibraryRepositoryImpl @Inject constructor(
         status: BookReadingStatus
     ) {
         libraryDao.upsert(
-            book.toEntity(status = status, addedAt = System.currentTimeMillis())
+            book.toEntity(status = status, true, addedAt = System.currentTimeMillis())
         )
     }
 
     override suspend fun removeBook(libraryBook: LibraryBook) {
         libraryDao.remove(
-            libraryBook.book.toEntity(libraryBook.readingStatus, libraryBook.addedAt)
+            libraryBook.book.toEntity(libraryBook.readingStatus, false, libraryBook.addedAt)
         )
     }
 
@@ -43,6 +43,7 @@ class LibraryRepositoryImpl @Inject constructor(
 
 fun Book.toEntity(
     status: BookReadingStatus,
+    isInLibrary: Boolean,
     addedAt: Long,
     synced: Boolean = false
 ): LibraryEntity {
@@ -51,7 +52,8 @@ fun Book.toEntity(
         title = volumeInfo.title,
         author = volumeInfo.authors?.joinToString(", ") ?: "",
         coverUrl = volumeInfo.bookCover.thumbnail,
-        status = status, isInLibrary = false,
+        status = status,
+        isInLibrary = isInLibrary,
         addedAt = addedAt,
         synced = synced
     )

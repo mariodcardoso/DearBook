@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -78,6 +79,7 @@ fun BookDetailsScreen(
     BookDetailsContent(
         modifier,
         uiState,
+        onRemoveBookFromLibrary = { viewModel.onRemoveBookFromLibraryClick() }
     ) { status ->
         viewModel.onReadingStatusClick(status)
     }
@@ -88,12 +90,15 @@ fun BookDetailsScreen(
 fun BookDetailsContent(
     modifier: Modifier = Modifier,
     uiState: BookDetailsUiState,
+    onRemoveBookFromLibrary: () -> Unit,
     onReadingBookStatusClicked: (BookReadingStatus) -> Unit,
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
+    var isBookInLibrary = false
 
     Scaffold(
         modifier = modifier, topBar = {
@@ -131,6 +136,8 @@ fun BookDetailsContent(
                 }
 
                 is BookDetailsUiState.Success -> {
+
+                    isBookInLibrary = uiState.isBookInLibrary
 
                     AsyncImage(
                         model = uiState.book.bookCover.thumbnail,
@@ -226,7 +233,34 @@ fun BookDetailsContent(
                     }
                 }
 
+                if (isBookInLibrary) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(12.dp)
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = {
+                                    onRemoveBookFromLibrary()
+                                    closeBottomSheet(
+                                        scope,
+                                        sheetState,
+                                        { showBottomSheet = false })
+                                }
+                            ),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = "Remove from library",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
+                    }
+                }
             }
         }
     }
@@ -262,6 +296,7 @@ fun SearchBookContentSuccessPreview() {
             BookReadingStatus.TO_READ,
             false
         ),
+        onRemoveBookFromLibrary = {}
     ) {}
 }
 
