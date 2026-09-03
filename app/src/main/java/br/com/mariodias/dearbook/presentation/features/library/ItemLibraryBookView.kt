@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +20,7 @@ import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.presentation.getStatusColor
 import coil3.compose.AsyncImage
 
 @Composable
@@ -33,7 +33,7 @@ fun ItemLibraryBookView(libraryBook: LibraryBook) {
 @Composable
 fun ItemLibraryBookViewContent(libraryBook: LibraryBook) {
 
-    Box() {
+    Box {
         AsyncImage(
             model = libraryBook.book.volumeInfo.bookCover.thumbnail,
             contentDescription = libraryBook.book.volumeInfo.title,
@@ -46,7 +46,7 @@ fun ItemLibraryBookViewContent(libraryBook: LibraryBook) {
         Icon(
             imageVector = Icons.Filled.Bookmark,
             contentDescription = null,
-            tint = libraryBook.readingStatus.color,
+            tint = getStatusColor(libraryBook.readingStatus),
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .size(36.dp)

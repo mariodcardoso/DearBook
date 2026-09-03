@@ -42,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,6 +55,8 @@ import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.presentation.getStatusColor
+import br.com.mariodias.dearbook.presentation.getStatusText
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
 
@@ -187,6 +188,7 @@ fun BookDetailsContent(
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = { showBottomSheet = false },
+            containerColor = MaterialTheme.colorScheme.background
         ) {
 
             Column(
@@ -199,11 +201,10 @@ fun BookDetailsContent(
                     fontWeight = FontWeight.Bold
                 )
 
-                BookReadingStatus.entries.forEach {
-                    ItemBottomSheetView(it.name, it.color)
+                BookReadingStatus.entries.forEach { status ->
+                    ItemBottomSheetView(status)
                 }
             }
-
         }
     }
 }
@@ -231,18 +232,21 @@ fun SearchBookContentSuccessPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ItemBottomSheetView(readingStatus: String = "To Read", readingStatusColor: Color = Color.Blue) {
+fun ItemBottomSheetView(readingStatus: BookReadingStatus = BookReadingStatus.TO_READ) {
+
+    val statusColor = getStatusColor(readingStatus)
+    val statusText = getStatusText(readingStatus)
 
     Row(
         modifier = Modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(readingStatusColor.copy(alpha = 0.1f))
-            .border(1.dp, readingStatusColor, shape = RoundedCornerShape(15.dp))
+            .background(statusColor.copy(alpha = 0.1f))
+            .border(1.dp, statusColor, shape = RoundedCornerShape(15.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(color = readingStatusColor.copy(alpha = 0.7f)),
+                indication = ripple(color = statusColor.copy(alpha = 0.7f)),
                 onClick = {}
             )
             .padding(8.dp),
@@ -254,18 +258,18 @@ fun ItemBottomSheetView(readingStatus: String = "To Read", readingStatusColor: C
             imageVector = Icons.Filled.Bookmark,
             contentDescription = null,
             modifier = Modifier.size(36.dp),
-            tint = readingStatusColor
+            tint = statusColor
         )
 
         Text(
-            text = readingStatus,
+            text = stringResource(statusText),
             style = MaterialTheme.typography.titleMedium,
         )
 
         Icon(
             imageVector = Icons.Filled.CheckCircle,
             contentDescription = null,
-            tint = readingStatusColor
+            tint = statusColor
         )
     }
 }
