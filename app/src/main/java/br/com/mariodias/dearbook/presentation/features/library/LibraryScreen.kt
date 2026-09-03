@@ -63,7 +63,9 @@ fun LibraryContent(
                 ) {
 
                     items(uiState.books, key = { it.book.id }) { libraryBook ->
-                        ItemLibraryBookView(libraryBook)
+                        ItemLibraryBookView(
+                            libraryBook,
+                            onClick = { onBookClick(libraryBook.book.id) })
                     }
 
                 }

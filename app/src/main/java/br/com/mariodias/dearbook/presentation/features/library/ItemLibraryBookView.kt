@@ -1,5 +1,6 @@
 package br.com.mariodias.dearbook.presentation.features.library
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.offset
@@ -24,16 +25,19 @@ import br.com.mariodias.dearbook.presentation.getStatusColor
 import coil3.compose.AsyncImage
 
 @Composable
-fun ItemLibraryBookView(libraryBook: LibraryBook) {
+fun ItemLibraryBookView(
+    libraryBook: LibraryBook,
+    onClick: () -> Unit
+) {
 
-    ItemLibraryBookViewContent(libraryBook)
+    ItemLibraryBookViewContent(libraryBook, onClick)
 
 }
 
 @Composable
-fun ItemLibraryBookViewContent(libraryBook: LibraryBook) {
+fun ItemLibraryBookViewContent(libraryBook: LibraryBook, onClick: () -> Unit) {
 
-    Box {
+    Box(modifier = Modifier.clickable { onClick() }) {
         AsyncImage(
             model = libraryBook.book.volumeInfo.bookCover.thumbnail,
             contentDescription = libraryBook.book.volumeInfo.title,
@@ -75,6 +79,6 @@ fun ItemLibraryBookViewContentPreview() {
         addedAt = 0L
     )
 
-    ItemLibraryBookViewContent(libraryBook)
+    ItemLibraryBookViewContent(libraryBook, onClick = {})
 
 }
