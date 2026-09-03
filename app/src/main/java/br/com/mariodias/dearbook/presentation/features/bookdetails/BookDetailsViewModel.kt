@@ -44,7 +44,7 @@ class BookDetailsViewModel @Inject constructor(
         }
     }
 
-    fun addToLibrary() {
+    fun addToLibrary(readingStatus: BookReadingStatus) {
         val currentState = uiState.value
 
         if (currentState !is BookDetailsUiState.Success) return
@@ -52,7 +52,7 @@ class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             libraryRepository.saveBook(
                 Book(bookId, currentState.book),
-                BookReadingStatus.TO_READ
+                readingStatus
             )
         }
 

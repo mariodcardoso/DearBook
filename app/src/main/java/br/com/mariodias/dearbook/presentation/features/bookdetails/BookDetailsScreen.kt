@@ -30,14 +30,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,6 +62,8 @@ import br.com.mariodias.dearbook.presentation.getStatusColor
 import br.com.mariodias.dearbook.presentation.getStatusText
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun BookDetailsScreen(
@@ -71,7 +76,7 @@ fun BookDetailsScreen(
     BookDetailsContent(
         modifier,
         uiState,
-        onAddToLibraryClick = { viewModel.addToLibrary() }
+        onAddToLibraryClick = { status -> viewModel.addToLibrary(status) }
     )
 
 }
@@ -80,10 +85,12 @@ fun BookDetailsScreen(
 fun BookDetailsContent(
     modifier: Modifier = Modifier,
     uiState: BookDetailsUiState,
-    onAddToLibraryClick: () -> Unit,
+    onAddToLibraryClick: (BookReadingStatus) -> Unit,
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier, topBar = {
@@ -187,8 +194,9 @@ fun BookDetailsContent(
 
     if (showBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
-            containerColor = MaterialTheme.colorScheme.background
+            onDismissRequest = { closeBottomSheet(scope, sheetState) { showBottomSheet = false } },
+            containerColor = MaterialTheme.colorScheme.background,
+            sheetState = sheetState
         ) {
 
             Column(
@@ -202,11 +210,26 @@ fun BookDetailsContent(
                 )
 
                 BookReadingStatus.entries.forEach { status ->
-                    ItemBottomSheetView(status)
+                    ItemBottomSheetView(status) {
+                        onAddToLibraryClick(status)
+                        closeBottomSheet(scope, sheetState, { showBottomSheet = false })
+
+
+                    }
                 }
             }
         }
     }
+}
+
+fun closeBottomSheet(scope: CoroutineScope, sheetState: SheetState, onHidden: () -> Unit) {
+
+    scope.launch { sheetState.hide() }
+        .invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                onHidden()
+            }
+        }
 }
 
 @Preview(showBackground = true)
@@ -230,9 +253,12 @@ fun SearchBookContentSuccessPreview() {
     )
 }
 
-@Preview(showBackground = true)
+
 @Composable
-fun ItemBottomSheetView(readingStatus: BookReadingStatus = BookReadingStatus.TO_READ) {
+fun ItemBottomSheetView(
+    readingStatus: BookReadingStatus = BookReadingStatus.TO_READ,
+    onAddToLibraryClick: (BookReadingStatus) -> Unit
+) {
 
     val statusColor = getStatusColor(readingStatus)
     val statusText = getStatusText(readingStatus)
@@ -247,7 +273,7 @@ fun ItemBottomSheetView(readingStatus: BookReadingStatus = BookReadingStatus.TO_
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(color = statusColor.copy(alpha = 0.7f)),
-                onClick = {}
+                onClick = { onAddToLibraryClick(readingStatus) }
             )
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
