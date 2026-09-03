@@ -71,6 +71,7 @@ fun ItemLibraryBookViewContentPreview() {
             )
         ),
         readingStatus = BookReadingStatus.TO_READ,
+        isInLibrary = true,
         addedAt = 0L
     )
 

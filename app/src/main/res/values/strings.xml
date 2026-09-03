@@ -7,7 +7,6 @@
     <string name="book_details_title">Book details</string>
     <string name="book_cover_description">Book Cover</string>
     <string name="add_to_library_description">Add to library</string>
-    <string name="add_to_library_button">+ Add to Library</string>
     <string name="synopsis_label">Synopsis</string>
     <string name="page_count">%1$d pages</string>
     <string name="nav_home">Home</string>
@@ -18,4 +17,5 @@
     <string name="to_read">To Read</string>
     <string name="reading">Reading</string>
     <string name="read">Read</string>
+    <string name="not_in_library">+ Add to Library</string>
 </resources>

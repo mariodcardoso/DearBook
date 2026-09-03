@@ -4,23 +4,37 @@ import androidx.compose.ui.graphics.Color
 import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.ui.theme.Ai
-import br.com.mariodias.dearbook.ui.theme.Matcha
+import br.com.mariodias.dearbook.ui.theme.DarkMatcha
+import br.com.mariodias.dearbook.ui.theme.Kinari
 import br.com.mariodias.dearbook.ui.theme.Sakura
+import br.com.mariodias.dearbook.ui.theme.Sumi
+import br.com.mariodias.dearbook.ui.theme.Washi
 
-fun getStatusColor(readingStatus: BookReadingStatus): Color {
+fun getStatusColor(readingStatus: BookReadingStatus?): Color {
 
     return when (readingStatus) {
         BookReadingStatus.TO_READ -> Sakura
-        BookReadingStatus.READING -> Matcha
+        BookReadingStatus.READING -> DarkMatcha
         BookReadingStatus.READ -> Ai
+        else -> Kinari
     }
 }
 
-fun getStatusText(readingStatus: BookReadingStatus): Int {
+fun getStatusTextColor(readingStatus: BookReadingStatus?): Color {
+    return when (readingStatus) {
+        BookReadingStatus.TO_READ -> Sumi
+        BookReadingStatus.READING -> Washi
+        BookReadingStatus.READ -> Washi
+        else -> Sumi
+    }
+}
 
+fun getStatusText(readingStatus: BookReadingStatus?): Int {
     return when (readingStatus) {
         BookReadingStatus.TO_READ -> R.string.to_read
         BookReadingStatus.READING -> R.string.reading
         BookReadingStatus.READ -> R.string.read
+        else -> R.string.not_in_library
     }
 }
+

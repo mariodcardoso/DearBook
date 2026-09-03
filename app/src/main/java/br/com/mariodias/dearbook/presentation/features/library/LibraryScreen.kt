@@ -88,6 +88,7 @@ fun LibraryContentSuccessPreview() {
                 )
             ),
             readingStatus = BookReadingStatus.TO_READ,
+            isInLibrary = true,
             addedAt = 0L
         ),
         LibraryBook(
@@ -101,6 +102,7 @@ fun LibraryContentSuccessPreview() {
                 )
             ),
             readingStatus = BookReadingStatus.READING,
+            isInLibrary = true,
             addedAt = 0L
         ),
         LibraryBook(
@@ -114,6 +116,7 @@ fun LibraryContentSuccessPreview() {
                 )
             ),
             readingStatus = BookReadingStatus.READ,
+            isInLibrary = true,
             addedAt = 0L
         ),
         LibraryBook(
@@ -127,6 +130,7 @@ fun LibraryContentSuccessPreview() {
                 )
             ),
             readingStatus = BookReadingStatus.READING,
+            isInLibrary = true,
             addedAt = 0L
         )
     )

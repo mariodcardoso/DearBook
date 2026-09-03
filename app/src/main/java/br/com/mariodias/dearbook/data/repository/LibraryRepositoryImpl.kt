@@ -51,7 +51,7 @@ fun Book.toEntity(
         title = volumeInfo.title,
         author = volumeInfo.authors?.joinToString(", ") ?: "",
         coverUrl = volumeInfo.bookCover.thumbnail,
-        status = status,
+        status = status, isInLibrary = false,
         addedAt = addedAt,
         synced = synced
     )
@@ -70,7 +70,7 @@ fun LibraryEntity.toDomain(): LibraryBook {
                 bookCover = BookCover(thumbnail = coverUrl)
             )
         ),
-        readingStatus = status,
+        readingStatus = status, isInLibrary = isInLibrary,
         addedAt = addedAt
     )
 }

@@ -13,6 +13,7 @@ data class LibraryEntity(
     val author: String,
     val coverUrl: String,
     val status: BookReadingStatus,
+    val isInLibrary: Boolean,
     val addedAt: Long,
     val synced: Boolean
 

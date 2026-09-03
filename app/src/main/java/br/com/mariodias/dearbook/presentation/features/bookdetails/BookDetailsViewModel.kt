@@ -31,10 +31,21 @@ class BookDetailsViewModel @Inject constructor(
     private val bookId = savedStateHandle.toRoute<BookDetails>().bookId
 
     init {
+        getBookDetails()
+    }
+
+    fun getBookDetails() {
         viewModelScope.launch {
             when (val result = bookRepository.fetchBookDetails(bookId)) {
                 is Resource.Success -> {
-                    _uiState.value = BookDetailsUiState.Success(result.response.volumeInfo)
+                    val libraryStatus = libraryRepository.getById(bookId)
+
+                    _uiState.value = BookDetailsUiState.Success(
+                        result.response.volumeInfo,
+                        libraryStatus?.readingStatus,
+                        libraryStatus?.isInLibrary ?: false
+
+                    )
                 }
 
                 is Resource.Error -> {
@@ -42,11 +53,11 @@ class BookDetailsViewModel @Inject constructor(
                 }
             }
         }
+
     }
 
-    fun addToLibrary(readingStatus: BookReadingStatus) {
+    fun onReadingStatusClick(readingStatus: BookReadingStatus) {
         val currentState = uiState.value
-
         if (currentState !is BookDetailsUiState.Success) return
 
         viewModelScope.launch {
@@ -54,14 +65,26 @@ class BookDetailsViewModel @Inject constructor(
                 Book(bookId, currentState.book),
                 readingStatus
             )
+            _uiState.value = BookDetailsUiState.Success(currentState.book, readingStatus, true)
         }
+    }
 
-
+    fun onRemoveBookFromLibraryClick(){
+        viewModelScope.launch {
+            libraryRepository.getById(bookId)?.let {
+                libraryRepository.removeBook(it)
+            }
+        }
     }
 }
 
 sealed interface BookDetailsUiState {
     object Loading : BookDetailsUiState
-    data class Success(val book: VolumeInfo) : BookDetailsUiState
+    data class Success(
+        val book: VolumeInfo,
+        val readingStatus: BookReadingStatus?,
+        val isBookInLibrary: Boolean
+    ) :
+        BookDetailsUiState
     data class Error(val errorMessage: String) : BookDetailsUiState
 }

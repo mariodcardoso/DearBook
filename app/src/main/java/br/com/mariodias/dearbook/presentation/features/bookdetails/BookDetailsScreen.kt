@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -60,6 +61,7 @@ import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.presentation.getStatusColor
 import br.com.mariodias.dearbook.presentation.getStatusText
+import br.com.mariodias.dearbook.presentation.getStatusTextColor
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
@@ -76,8 +78,9 @@ fun BookDetailsScreen(
     BookDetailsContent(
         modifier,
         uiState,
-        onAddToLibraryClick = { status -> viewModel.addToLibrary(status) }
-    )
+    ) { status ->
+        viewModel.onReadingStatusClick(status)
+    }
 
 }
 
@@ -85,7 +88,7 @@ fun BookDetailsScreen(
 fun BookDetailsContent(
     modifier: Modifier = Modifier,
     uiState: BookDetailsUiState,
-    onAddToLibraryClick: (BookReadingStatus) -> Unit,
+    onReadingBookStatusClicked: (BookReadingStatus) -> Unit,
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -128,6 +131,7 @@ fun BookDetailsContent(
                 }
 
                 is BookDetailsUiState.Success -> {
+
                     AsyncImage(
                         model = uiState.book.bookCover.thumbnail,
                         contentDescription = null,
@@ -162,11 +166,17 @@ fun BookDetailsContent(
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            containerColor = getStatusColor(uiState.readingStatus),
+                            contentColor = getStatusTextColor(uiState.readingStatus),
+                            disabledContainerColor = getStatusColor(uiState.readingStatus),
+                            disabledContentColor = getStatusColor(uiState.readingStatus),
+                        ),
                         onClick = {
                             showBottomSheet = true
                         }
                     ) {
-                        Text(text = stringResource(R.string.add_to_library_button))
+                        Text(text = stringResource(getStatusText(uiState.readingStatus)))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -211,19 +221,18 @@ fun BookDetailsContent(
 
                 BookReadingStatus.entries.forEach { status ->
                     ItemBottomSheetView(status) {
-                        onAddToLibraryClick(status)
+                        onReadingBookStatusClicked(status)
                         closeBottomSheet(scope, sheetState, { showBottomSheet = false })
-
-
                     }
                 }
+
+
             }
         }
     }
 }
 
 fun closeBottomSheet(scope: CoroutineScope, sheetState: SheetState, onHidden: () -> Unit) {
-
     scope.launch { sheetState.hide() }
         .invokeOnCompletion {
             if (!sheetState.isVisible) {
@@ -248,9 +257,12 @@ fun SearchBookContentSuccessPreview() {
     )
 
     BookDetailsContent(
-        uiState = BookDetailsUiState.Success(fakeBook.volumeInfo),
-        onAddToLibraryClick = {}
-    )
+        uiState = BookDetailsUiState.Success(
+            fakeBook.volumeInfo,
+            BookReadingStatus.TO_READ,
+            false
+        ),
+    ) {}
 }
 
 

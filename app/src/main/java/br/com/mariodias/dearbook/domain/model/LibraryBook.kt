@@ -4,6 +4,7 @@ package br.com.mariodias.dearbook.domain.model
 data class LibraryBook(
     val book: Book,
     val readingStatus: BookReadingStatus,
+    val isInLibrary: Boolean,
     val addedAt: Long
 )
 
