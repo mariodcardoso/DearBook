@@ -40,6 +40,8 @@ fun DearBookNavHost(
             )
         }
 
-        composable<BookDetails> { BookDetailsScreen() }
+        composable<BookDetails> { BookDetailsScreen(
+            onBackClick = { navController.popBackStack()}
+        ) }
     }
 }

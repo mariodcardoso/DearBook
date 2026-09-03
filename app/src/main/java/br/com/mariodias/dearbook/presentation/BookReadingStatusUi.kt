@@ -11,13 +11,13 @@ import br.com.mariodias.dearbook.ui.theme.Sumi
 import br.com.mariodias.dearbook.ui.theme.Washi
 
 fun getStatusColor(readingStatus: BookReadingStatus?): Color {
-
     return when (readingStatus) {
         BookReadingStatus.TO_READ -> Sakura
         BookReadingStatus.READING -> DarkMatcha
         BookReadingStatus.READ -> Ai
         else -> Kinari
     }
+
 }
 
 fun getStatusTextColor(readingStatus: BookReadingStatus?): Color {

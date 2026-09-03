@@ -22,9 +22,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -63,7 +67,10 @@ import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.presentation.getStatusColor
 import br.com.mariodias.dearbook.presentation.getStatusText
 import br.com.mariodias.dearbook.presentation.getStatusTextColor
+import br.com.mariodias.dearbook.ui.theme.Kinari
+import br.com.mariodias.dearbook.ui.theme.Momiji
 import br.com.mariodias.dearbook.ui.theme.Spacing
+import br.com.mariodias.dearbook.ui.theme.Sumi
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -71,7 +78,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun BookDetailsScreen(
     modifier: Modifier = Modifier,
-    viewModel: BookDetailsViewModel = hiltViewModel()
+    viewModel: BookDetailsViewModel = hiltViewModel(),
+    onBackClick: () -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -79,7 +87,9 @@ fun BookDetailsScreen(
     BookDetailsContent(
         modifier,
         uiState,
-        onRemoveBookFromLibrary = { viewModel.onRemoveBookFromLibraryClick() }
+        onRemoveBookFromLibrary = { viewModel.onRemoveBookFromLibraryClick() },
+        onBackClick = { onBackClick() }
+
     ) { status ->
         viewModel.onReadingStatusClick(status)
     }
@@ -91,6 +101,7 @@ fun BookDetailsContent(
     modifier: Modifier = Modifier,
     uiState: BookDetailsUiState,
     onRemoveBookFromLibrary: () -> Unit,
+    onBackClick: () -> Unit,
     onReadingBookStatusClicked: (BookReadingStatus) -> Unit,
 ) {
 
@@ -99,14 +110,23 @@ fun BookDetailsContent(
     val scope = rememberCoroutineScope()
 
     var isBookInLibrary = false
+    var readingStatusSelected: BookReadingStatus? = null
 
     Scaffold(
         modifier = modifier, topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.book_details_title),
-                        style = MaterialTheme.typography.headlineSmall,
+                title = { Text(text = "") },
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ChevronLeft,
+                        contentDescription = "Back",
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .clip(RoundedCornerShape(100))
+                            .background(color = Sumi.copy(0.12f))
+                            .clickable(onClick = onBackClick)
+                            .padding(10.dp),
+                        tint = Sumi
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -139,6 +159,7 @@ fun BookDetailsContent(
                 is BookDetailsUiState.Success -> {
 
                     isBookInLibrary = uiState.isBookInLibrary
+                    readingStatusSelected = uiState.readingStatus
 
                     AsyncImage(
                         model = uiState.book.bookCover.thumbnail,
@@ -174,11 +195,9 @@ fun BookDetailsContent(
 
                     Button(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = getStatusColor(uiState.readingStatus),
-                            contentColor = getStatusTextColor(uiState.readingStatus),
-                            disabledContainerColor = getStatusColor(uiState.readingStatus),
-                            disabledContentColor = getStatusColor(uiState.readingStatus),
+                            contentColor = getStatusTextColor(uiState.readingStatus)
                         ),
                         onClick = {
                             showBottomSheet = true
@@ -193,7 +212,8 @@ fun BookDetailsContent(
 
                         Text(
                             text = stringResource(R.string.synopsis_label),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -228,7 +248,7 @@ fun BookDetailsContent(
                 )
 
                 BookReadingStatus.entries.forEach { status ->
-                    ItemBottomSheetView(status) {
+                    ItemBottomSheetView(status, readingStatusSelected) {
                         onReadingBookStatusClicked(status)
                         closeBottomSheet(scope, sheetState, { showBottomSheet = false })
                     }
@@ -255,9 +275,17 @@ fun BookDetailsContent(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Remove",
+                            tint = Momiji
+                        )
+
                         Text(
                             text = "Remove from library",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Momiji
                         )
 
                     }
@@ -294,10 +322,11 @@ fun SearchBookContentSuccessPreview() {
     BookDetailsContent(
         uiState = BookDetailsUiState.Success(
             fakeBook.volumeInfo,
-            BookReadingStatus.TO_READ,
+            BookReadingStatus.READING,
             false
         ),
-        onRemoveBookFromLibrary = {}
+        onRemoveBookFromLibrary = {},
+        onBackClick = {}
     ) {}
 }
 
@@ -305,10 +334,13 @@ fun SearchBookContentSuccessPreview() {
 @Composable
 fun ItemBottomSheetView(
     readingStatus: BookReadingStatus = BookReadingStatus.TO_READ,
+    readingStatusSelected: BookReadingStatus?,
     onAddToLibraryClick: (BookReadingStatus) -> Unit
 ) {
 
-    val statusColor = getStatusColor(readingStatus)
+    val isSelected = readingStatus == readingStatusSelected
+
+    val statusColor = if (isSelected) getStatusColor(readingStatus) else Kinari
     val statusText = getStatusText(readingStatus)
 
     Row(
@@ -329,7 +361,7 @@ fun ItemBottomSheetView(
     ) {
 
         Icon(
-            imageVector = Icons.Filled.Bookmark,
+            imageVector = if (isSelected) Icons.Filled.Bookmark else Icons.Default.BookmarkBorder,
             contentDescription = null,
             modifier = Modifier.size(36.dp),
             tint = statusColor
@@ -337,11 +369,12 @@ fun ItemBottomSheetView(
 
         Text(
             text = stringResource(statusText),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
         )
 
         Icon(
-            imageVector = Icons.Filled.CheckCircle,
+            imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Default.RadioButtonUnchecked,
             contentDescription = null,
             tint = statusColor
         )

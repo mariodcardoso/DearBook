@@ -8,7 +8,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +39,7 @@ fun LibraryScreen(
     LibraryContent(modifier, uiState, onBookClick)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryContent(
     modifier: Modifier = Modifier,
@@ -40,34 +47,52 @@ fun LibraryContent(
     onBookClick: (String) -> Unit
 ) {
 
-    when (uiState) {
-        LibraryUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .align(Alignment.Center)
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = "") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
                 )
+            )
+        }
+    ) { innerPadding ->
+
+        when (uiState) {
+            LibraryUiState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .align(Alignment.Center)
+                    )
+                }
             }
-        }
 
-        LibraryUiState.Empty -> { /* Text de "estante vazia" */
-        }
+            LibraryUiState.Empty -> { /* Text de "estante vazia" */ }
 
-        is LibraryUiState.Success -> {
-            Box(modifier = Modifier.padding(18.dp)) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 96.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+            is LibraryUiState.Success -> {
+                Box(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .padding(horizontal = 18.dp)
                 ) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 96.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxSize()
 
-                    items(uiState.books, key = { it.book.id }) { libraryBook ->
-                        ItemLibraryBookView(
-                            libraryBook,
-                            onClick = { onBookClick(libraryBook.book.id) })
+                    ) {
+
+                        items(uiState.books, key = { it.book.id }) { libraryBook ->
+                            ItemLibraryBookView(
+                                libraryBook,
+                                onClick = { onBookClick(libraryBook.book.id) })
+                        }
+
                     }
-
                 }
             }
         }
