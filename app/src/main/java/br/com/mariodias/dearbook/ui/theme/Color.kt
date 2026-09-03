@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 val Matcha = Color(0xFF7C9473)
 val DarkMatcha = Color(0xFF5F7358)
-val Sakura = Color(0xFFF0C4C9)
+val Tsutsuji = Color(0xFFC4536A)
 val Uguisu = Color(0xFF8A8563)
 val Sumi = Color(0xFF3A3A32)
 val Washi = Color(0xFFF5F3EA)

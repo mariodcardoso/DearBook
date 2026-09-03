@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
@@ -71,6 +72,7 @@ import br.com.mariodias.dearbook.ui.theme.Kinari
 import br.com.mariodias.dearbook.ui.theme.Momiji
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import br.com.mariodias.dearbook.ui.theme.Sumi
+import br.com.mariodias.dearbook.ui.theme.Washi
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -203,8 +205,26 @@ fun BookDetailsContent(
                             showBottomSheet = true
                         }
                     ) {
-                        Text(text = stringResource(getStatusText(uiState.readingStatus)))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (uiState.readingStatus == BookReadingStatus.READ) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircleOutline,
+                                    contentDescription = null,
+                                    tint = Washi,
+                                    modifier = Modifier.size(18.dp)
+
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = stringResource(getStatusText(uiState.readingStatus)))
+                        }
                     }
+
+
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -322,7 +342,7 @@ fun SearchBookContentSuccessPreview() {
     BookDetailsContent(
         uiState = BookDetailsUiState.Success(
             fakeBook.volumeInfo,
-            BookReadingStatus.READING,
+            BookReadingStatus.READ,
             false
         ),
         onRemoveBookFromLibrary = {},

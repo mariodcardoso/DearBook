@@ -6,13 +6,13 @@ import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.ui.theme.Ai
 import br.com.mariodias.dearbook.ui.theme.DarkMatcha
 import br.com.mariodias.dearbook.ui.theme.Kinari
-import br.com.mariodias.dearbook.ui.theme.Sakura
+import br.com.mariodias.dearbook.ui.theme.Tsutsuji
 import br.com.mariodias.dearbook.ui.theme.Sumi
 import br.com.mariodias.dearbook.ui.theme.Washi
 
 fun getStatusColor(readingStatus: BookReadingStatus?): Color {
     return when (readingStatus) {
-        BookReadingStatus.TO_READ -> Sakura
+        BookReadingStatus.TO_READ -> Tsutsuji
         BookReadingStatus.READING -> DarkMatcha
         BookReadingStatus.READ -> Ai
         else -> Kinari
@@ -22,7 +22,7 @@ fun getStatusColor(readingStatus: BookReadingStatus?): Color {
 
 fun getStatusTextColor(readingStatus: BookReadingStatus?): Color {
     return when (readingStatus) {
-        BookReadingStatus.TO_READ -> Sumi
+        BookReadingStatus.TO_READ -> Washi
         BookReadingStatus.READING -> Washi
         BookReadingStatus.READ -> Washi
         else -> Sumi
