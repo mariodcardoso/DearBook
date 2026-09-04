@@ -9,7 +9,9 @@ import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.domain.repository.BookRepository
-import br.com.mariodias.dearbook.domain.repository.LibraryRepository
+import br.com.mariodias.dearbook.domain.usecase.GetLibraryBookByIdUseCase
+import br.com.mariodias.dearbook.domain.usecase.RemoveBookFromLibraryUseCase
+import br.com.mariodias.dearbook.domain.usecase.SaveBookToLibraryUseCase
 import br.com.mariodias.dearbook.presentation.navigation.BookDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BookDetailsViewModel @Inject constructor(
     private val bookRepository: BookRepository,
-    private val libraryRepository: LibraryRepository,
+    private val saveBookToLibraryUseCase: SaveBookToLibraryUseCase,
+    private val removeBookFromLibraryUseCase: RemoveBookFromLibraryUseCase,
+    private val getLibraryBookByIdUseCase: GetLibraryBookByIdUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -38,7 +42,7 @@ class BookDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = bookRepository.fetchBookDetails(bookId)) {
                 is Resource.Success -> {
-                    val libraryStatus = libraryRepository.getById(bookId)
+                    val libraryStatus = getLibraryBookByIdUseCase(bookId)
 
                     _uiState.value = BookDetailsUiState.Success(
                         result.response.volumeInfo,
@@ -61,7 +65,7 @@ class BookDetailsViewModel @Inject constructor(
         if (currentState !is BookDetailsUiState.Success) return
 
         viewModelScope.launch {
-            libraryRepository.saveBook(
+            saveBookToLibraryUseCase(
                 Book(bookId, currentState.book),
                 readingStatus
             )
@@ -74,11 +78,9 @@ class BookDetailsViewModel @Inject constructor(
         if (currentState !is BookDetailsUiState.Success) return
 
         viewModelScope.launch {
-            libraryRepository.getById(bookId)?.let { bookId ->
-                libraryRepository.removeBook(bookId)
-            }
-            _uiState.value = BookDetailsUiState.Success(currentState.book, null, false)
+            removeBookFromLibraryUseCase(bookId)
 
+            _uiState.value = BookDetailsUiState.Success(currentState.book, null, false)
         }
     }
 }

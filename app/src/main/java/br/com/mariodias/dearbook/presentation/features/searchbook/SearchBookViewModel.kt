@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import br.com.mariodias.dearbook.data.Resource
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.repository.BookRepository
+import br.com.mariodias.dearbook.domain.usecase.GetLibraryBookByIdUseCase
+import br.com.mariodias.dearbook.domain.usecase.RemoveBookFromLibraryUseCase
+import br.com.mariodias.dearbook.domain.usecase.SaveBookToLibraryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchBookViewModel @Inject constructor(
-    private val repository: BookRepository
+    private val repository: BookRepository,
+    private val saveBookToLibraryUseCase: SaveBookToLibraryUseCase,
+    private val removeBookFromLibraryUseCase: RemoveBookFromLibraryUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<SearchBookUiState>(SearchBookUiState.Idle)
