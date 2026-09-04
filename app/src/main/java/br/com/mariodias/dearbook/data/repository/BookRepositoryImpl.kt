@@ -65,7 +65,10 @@ fun VolumeInfoDto.toDomain(): VolumeInfo {
 
 fun BookCoverDto.toDomain(): BookCover {
     return BookCover(
-        thumbnail = (thumbnail ?: "").replace("http://", "https://")
+        thumbnail =
+            (thumbnail ?: "")
+                .replace("http://", "https://")
+                .replace(Regex("zoom=\\d"), "zoom=3")
     )
 }
 

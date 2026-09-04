@@ -21,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.CheckCircle
@@ -28,6 +29,8 @@ import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
+import androidx.compose.material.icons.outlined.Book
+import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -166,7 +169,7 @@ fun BookDetailsContent(
                     AsyncImage(
                         model = uiState.book.bookCover.thumbnail,
                         contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .height(280.dp)
                             .width(208.dp)
@@ -210,15 +213,22 @@ fun BookDetailsContent(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            if (uiState.readingStatus == BookReadingStatus.READ) {
+
+                            val icon = when (uiState.readingStatus) {
+                                BookReadingStatus.TO_READ -> Icons.Default.BookmarkBorder
+                                BookReadingStatus.READING -> Icons.Outlined.MenuBook
+                                BookReadingStatus.READ -> Icons.Default.CheckCircleOutline
+                                else -> Icons.Default.AddCircleOutline
+                            }
+
                                 Icon(
-                                    imageVector = Icons.Default.CheckCircleOutline,
+                                    imageVector = icon,
                                     contentDescription = null,
-                                    tint = Washi,
+                                    tint = getStatusTextColor(uiState.readingStatus),
                                     modifier = Modifier.size(18.dp)
 
                                 )
-                            }
+
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = stringResource(getStatusText(uiState.readingStatus)))
                         }
@@ -342,7 +352,7 @@ fun SearchBookContentSuccessPreview() {
     BookDetailsContent(
         uiState = BookDetailsUiState.Success(
             fakeBook.volumeInfo,
-            BookReadingStatus.READ,
+            null,
             false
         ),
         onRemoveBookFromLibrary = {},
