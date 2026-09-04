@@ -23,7 +23,7 @@ import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
-import br.com.mariodias.dearbook.presentation.getStatusColor
+import br.com.mariodias.dearbook.presentation.getReadingStatusColor
 import br.com.mariodias.dearbook.ui.theme.Washi
 import coil3.compose.AsyncImage
 
@@ -66,7 +66,7 @@ fun ItemLibraryBookViewContent(libraryBook: LibraryBook, onClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Filled.Bookmark,
                 contentDescription = null,
-                tint = getStatusColor(libraryBook.readingStatus),
+                tint = getReadingStatusColor(libraryBook.readingStatus),
                 modifier = Modifier
                     .size(26.dp)
                     .offset(y = (-4).dp)

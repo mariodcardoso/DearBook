@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -30,12 +28,23 @@ import androidx.compose.ui.unit.dp
 import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.presentation.getReadingStatusIcon
+import br.com.mariodias.dearbook.presentation.getReadingStatusColor
+import br.com.mariodias.dearbook.presentation.getStatusText
+import br.com.mariodias.dearbook.presentation.getReadingStatusContentColor
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import coil3.compose.AsyncImage
 
 @Composable
-fun ItemBookListView(book: Book, onClick: () -> Unit) {
+fun ItemBookListView(
+    book: Book,
+    readingStatus: BookReadingStatus?,
+    onClick: () -> Unit,
+    onAddButtonClicked: (book: Book) -> Unit,
+
+    ) {
 
     Row(
         modifier = Modifier
@@ -89,16 +98,17 @@ fun ItemBookListView(book: Book, onClick: () -> Unit) {
         }
 
         FilledIconButton(
-            onClick = { /* adicionar à biblioteca */ },
             modifier = Modifier.size(28.dp),
             colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
+                containerColor = getReadingStatusColor(readingStatus),
+                contentColor = getReadingStatusContentColor(readingStatus)
+            ),
+            onClick = { onAddButtonClicked(book) }
+
         ) {
             Icon(
-                Icons.Default.Add,
-                contentDescription = stringResource(R.string.add_to_library_description),
+                imageVector = getReadingStatusIcon(readingStatus),
+                contentDescription = stringResource(getStatusText(readingStatus)),
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -120,6 +130,8 @@ private fun ItemBookListViewPreview() {
                 bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
             )
         ),
-        onClick = {}
+        readingStatus = BookReadingStatus.READ,
+        onClick = {},
+        onAddButtonClicked = {}
     )
 }

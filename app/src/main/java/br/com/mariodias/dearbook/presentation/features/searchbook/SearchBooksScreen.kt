@@ -40,7 +40,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
+import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.presentation.components.ReadingStatusBottomSheet
 import br.com.mariodias.dearbook.ui.theme.Spacing
 
 private val fakeBooks = listOf(
@@ -82,18 +85,27 @@ private val fakeBooks = listOf(
 fun SearchBooksScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchBookViewModel = hiltViewModel(),
-    onBookClick: (String) -> Unit
+    onBookClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val query by viewModel.query.collectAsStateWithLifecycle()
 
+    val libraryState by viewModel.libraryState.collectAsStateWithLifecycle()
+    val selectedBook by viewModel.selectedBook.collectAsStateWithLifecycle()
+
     SearchBookContent(
         modifier = modifier,
         uiState = uiState,
+        libraryState = libraryState,
+        selectedBook = selectedBook,
         query = query,
         onQueryChange = viewModel::onQueryChange,
         onSearch = viewModel::onSearch,
-        onBookClick = onBookClick
+        onBookClick = onBookClick,
+        onAddButtonClick = viewModel::onAddButtonClick,
+        onReadingBookStatusClicked = viewModel::onReadingStatusClick,
+        onRemoveBookFromLibrary = viewModel::onRemoveFromLibraryClick,
+        onDismissBottomSheet = viewModel::onDismissBottomSheet
     )
 }
 
@@ -102,9 +114,13 @@ fun SearchBooksScreen(
 private fun SearchBookContentSuccessPreview() {
     SearchBookContent(
         uiState = SearchBookUiState.Success(fakeBooks),
-        onBookClick = {}
-
-
+        onBookClick = {},
+        libraryState = emptyMap(),
+        selectedBook = null,
+        onAddButtonClick = {},
+        onReadingBookStatusClicked = {},
+        onRemoveBookFromLibrary = {},
+        onDismissBottomSheet = {}
     )
 }
 
@@ -112,10 +128,16 @@ private fun SearchBookContentSuccessPreview() {
 fun SearchBookContent(
     modifier: Modifier = Modifier,
     uiState: SearchBookUiState = SearchBookUiState.Idle,
+    libraryState: Map<String, LibraryBook>,
+    selectedBook: Book?,
     query: String = "",
     onQueryChange: (String) -> Unit = {},
     onSearch: () -> Unit = {},
-    onBookClick: (String) -> Unit
+    onBookClick: (String) -> Unit,
+    onAddButtonClick: (Book) -> Unit,
+    onReadingBookStatusClicked: (BookReadingStatus) -> Unit,
+    onRemoveBookFromLibrary: () -> Unit,
+    onDismissBottomSheet: () -> Unit
 ) {
 
     Scaffold(
@@ -189,7 +211,12 @@ fun SearchBookContent(
                         verticalArrangement = Arrangement.spacedBy(Spacing.cardGap)
                     ) {
                         items(uiState.bookList, key = { it.id }) { book ->
-                            ItemBookListView(book, onClick = { onBookClick(book.id)})
+                            ItemBookListView(
+                                book,
+                                libraryState[book.id]?.readingStatus,
+                                onClick = { onBookClick(book.id) },
+                                onAddButtonClicked = onAddButtonClick
+                            )
                         }
                     }
                 }
@@ -201,6 +228,15 @@ fun SearchBookContent(
                 is SearchBookUiState.Error -> {}
             }
 
+            selectedBook?.let {
+                ReadingStatusBottomSheet(
+                    isBookInLibrary = libraryState[selectedBook.id]?.isInLibrary ?: false,
+                    readingStatusSelected = libraryState[selectedBook.id]?.readingStatus,
+                    onReadingBookStatusClicked = onReadingBookStatusClicked,
+                    onRemoveBookFromLibrary = onRemoveBookFromLibrary,
+                    onDismissRequest = onDismissBottomSheet
+                )
+            }
         }
     }
 }

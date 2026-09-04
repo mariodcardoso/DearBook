@@ -3,9 +3,7 @@
 package br.com.mariodias.dearbook.presentation.features.bookdetails
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,35 +19,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
-import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,16 +51,14 @@ import br.com.mariodias.dearbook.domain.model.Book
 import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
-import br.com.mariodias.dearbook.presentation.getStatusColor
+import br.com.mariodias.dearbook.presentation.components.ReadingStatusBottomSheet
+import br.com.mariodias.dearbook.presentation.getReadingStatusIcon
+import br.com.mariodias.dearbook.presentation.getReadingStatusColor
 import br.com.mariodias.dearbook.presentation.getStatusText
-import br.com.mariodias.dearbook.presentation.getStatusTextColor
-import br.com.mariodias.dearbook.ui.theme.Kinari
-import br.com.mariodias.dearbook.ui.theme.Momiji
+import br.com.mariodias.dearbook.presentation.getReadingStatusContentColor
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import br.com.mariodias.dearbook.ui.theme.Sumi
 import coil3.compose.AsyncImage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun BookDetailsScreen(
@@ -109,9 +91,6 @@ fun BookDetailsContent(
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
-    val scope = rememberCoroutineScope()
-
     var isBookInLibrary = false
     var readingStatusSelected: BookReadingStatus? = null
 
@@ -199,8 +178,8 @@ fun BookDetailsContent(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = getStatusColor(uiState.readingStatus),
-                            contentColor = getStatusTextColor(uiState.readingStatus)
+                            containerColor = getReadingStatusColor(uiState.readingStatus),
+                            contentColor = getReadingStatusContentColor(uiState.readingStatus)
                         ),
                         onClick = {
                             showBottomSheet = true
@@ -211,20 +190,12 @@ fun BookDetailsContent(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-
-                            val icon = when (uiState.readingStatus) {
-                                BookReadingStatus.TO_READ -> Icons.Default.BookmarkBorder
-                                BookReadingStatus.READING -> Icons.Outlined.MenuBook
-                                BookReadingStatus.READ -> Icons.Default.CheckCircleOutline
-                                else -> Icons.Default.AddCircleOutline
-                            }
-
-                                Icon(
-                                    imageVector = icon,
-                                    contentDescription = null,
-                                    tint = getStatusTextColor(uiState.readingStatus),
-                                    modifier = Modifier.size(18.dp)
-                                )
+                            Icon(
+                                imageVector = getReadingStatusIcon(uiState.readingStatus),
+                                contentDescription = null,
+                                tint = getReadingStatusContentColor(uiState.readingStatus),
+                                modifier = Modifier.size(18.dp)
+                            )
 
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = stringResource(getStatusText(uiState.readingStatus)))
@@ -253,81 +224,20 @@ fun BookDetailsContent(
             }
 
         }
-    }
 
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { closeBottomSheet(scope, sheetState) { showBottomSheet = false } },
-            containerColor = MaterialTheme.colorScheme.background,
-            sheetState = sheetState
-        ) {
+        if (showBottomSheet) {
+            ReadingStatusBottomSheet(
+                isBookInLibrary = isBookInLibrary,
+                readingStatusSelected = readingStatusSelected,
+                onReadingBookStatusClicked = onReadingBookStatusClicked,
+                onRemoveBookFromLibrary = onRemoveBookFromLibrary,
+                onDismissRequest = { showBottomSheet = false }
+            )
 
-            Column(
-                Modifier.padding(horizontal = 16.dp)
-            ) {
-                Text(
-                    text = "Reading Status",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontWeight = FontWeight.Bold
-                )
-
-                BookReadingStatus.entries.forEach { status ->
-                    ItemBottomSheetView(status, readingStatusSelected) {
-                        onReadingBookStatusClicked(status)
-                        closeBottomSheet(scope, sheetState, { showBottomSheet = false })
-                    }
-                }
-
-                if (isBookInLibrary) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(12.dp)
-                    )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 20.dp)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                onClick = {
-                                    onRemoveBookFromLibrary()
-                                    closeBottomSheet(
-                                        scope,
-                                        sheetState,
-                                        { showBottomSheet = false })
-                                }
-                            ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Remove",
-                            tint = Momiji
-                        )
-
-                        Text(
-                            text = "Remove from library",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = Momiji
-                        )
-
-                    }
-                }
-            }
         }
     }
 }
 
-fun closeBottomSheet(scope: CoroutineScope, sheetState: SheetState, onHidden: () -> Unit) {
-    scope.launch { sheetState.hide() }
-        .invokeOnCompletion {
-            if (!sheetState.isVisible) {
-                onHidden()
-            }
-        }
-}
 
 @Preview(showBackground = true)
 @Composable
@@ -353,55 +263,4 @@ fun SearchBookContentSuccessPreview() {
         onRemoveBookFromLibrary = {},
         onBackClick = {}
     ) {}
-}
-
-
-@Composable
-fun ItemBottomSheetView(
-    readingStatus: BookReadingStatus = BookReadingStatus.TO_READ,
-    readingStatusSelected: BookReadingStatus?,
-    onAddToLibraryClick: (BookReadingStatus) -> Unit
-) {
-
-    val isSelected = readingStatus == readingStatusSelected
-
-    val statusColor = if (isSelected) getStatusColor(readingStatus) else Kinari
-    val statusText = getStatusText(readingStatus)
-
-    Row(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(15.dp))
-            .background(statusColor.copy(alpha = 0.1f))
-            .border(1.dp, statusColor, shape = RoundedCornerShape(15.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(color = statusColor.copy(alpha = 0.7f)),
-                onClick = { onAddToLibraryClick(readingStatus) }
-            )
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-
-        Icon(
-            imageVector = if (isSelected) Icons.Filled.Bookmark else Icons.Default.BookmarkBorder,
-            contentDescription = null,
-            modifier = Modifier.size(36.dp),
-            tint = statusColor
-        )
-
-        Text(
-            text = stringResource(statusText),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
-        )
-
-        Icon(
-            imageVector = if (isSelected) Icons.Filled.CheckCircle else Icons.Default.RadioButtonUnchecked,
-            contentDescription = null,
-            tint = statusColor
-        )
-    }
 }
