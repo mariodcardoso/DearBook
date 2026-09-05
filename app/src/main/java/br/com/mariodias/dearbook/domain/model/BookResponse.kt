@@ -22,7 +22,8 @@ data class VolumeInfo(
     val authors: List<String>? = listOf<String>("Author Unknowledge"),
     val description: String? = "",
     val pageCount: Int,
-    val bookCover: BookCover
+    val bookCover: BookCover,
+    val averageRating: Float? = 0f
 )
 
 @Serializable

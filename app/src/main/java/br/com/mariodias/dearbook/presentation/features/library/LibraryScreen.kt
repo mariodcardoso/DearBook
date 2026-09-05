@@ -111,7 +111,8 @@ fun LibraryContentSuccessPreview() {
                     title = "Norwegian Wood",
                     subtitle = "",
                     pageCount = 296,
-                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg"),
+                    averageRating = 3.5f
                 )
             ),
             readingStatus = BookReadingStatus.TO_READ,
@@ -125,7 +126,8 @@ fun LibraryContentSuccessPreview() {
                     title = "Norwegian Wood",
                     subtitle = "",
                     pageCount = 296,
-                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg"),
+                    averageRating = 3.5f
                 )
             ),
             readingStatus = BookReadingStatus.READING,
@@ -139,7 +141,8 @@ fun LibraryContentSuccessPreview() {
                     title = "Norwegian Wood",
                     subtitle = "",
                     pageCount = 296,
-                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg"),
+                    averageRating = 3.5f
                 )
             ),
             readingStatus = BookReadingStatus.READ,
@@ -153,7 +156,8 @@ fun LibraryContentSuccessPreview() {
                     title = "Norwegian Wood",
                     subtitle = "",
                     pageCount = 296,
-                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+                    bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg"),
+                    averageRating = 3.5f
                 )
             ),
             readingStatus = BookReadingStatus.READING,

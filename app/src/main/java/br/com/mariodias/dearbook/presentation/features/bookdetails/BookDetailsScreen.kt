@@ -58,6 +58,7 @@ import br.com.mariodias.dearbook.presentation.getStatusText
 import br.com.mariodias.dearbook.presentation.getReadingStatusContentColor
 import br.com.mariodias.dearbook.ui.theme.Spacing
 import br.com.mariodias.dearbook.ui.theme.Sumi
+import br.com.mariodias.dearbook.ui.theme.Uguisu
 import coil3.compose.AsyncImage
 
 @Composable
@@ -157,21 +158,21 @@ fun BookDetailsContent(
 
                     Text(
                         text = uiState.book.title,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Sumi,
                         textAlign = TextAlign.Center
                     )
 
                     Text(
                         text = uiState.book.authors?.firstOrNull() ?: "Author Unknown",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.titleSmall,
+                        color = Uguisu
                     )
 
                     Text(
                         text = stringResource(R.string.page_count, uiState.book.pageCount),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Uguisu
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -198,7 +199,10 @@ fun BookDetailsContent(
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = stringResource(getStatusText(uiState.readingStatus)))
+                            Text(
+                                text = stringResource(getStatusText(uiState.readingStatus)),
+                                style = MaterialTheme.typography.labelLarge
+                            )
                         }
                     }
 
@@ -208,14 +212,14 @@ fun BookDetailsContent(
 
                         Text(
                             text = stringResource(R.string.synopsis_label),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Sumi
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = uiState.book.description ?: "",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Sumi
                         )
                     }
                 }
@@ -250,7 +254,8 @@ fun SearchBookContentSuccessPreview() {
             authors = listOf("Haruki Murakami"),
             description = "Toru Watanabe relembra sua juventude no Japão dos anos 60, marcada por amizade, perda e os primeiros grandes amores de sua vida.",
             pageCount = 296,
-            bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg")
+            bookCover = BookCover(thumbnail = "https://covers.openlibrary.org/b/isbn/9780099448822-M.jpg"),
+            averageRating = 3.5f
         )
     )
 

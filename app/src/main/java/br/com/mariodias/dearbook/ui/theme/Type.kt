@@ -16,7 +16,7 @@ private val fontProvider = GoogleFont.Provider(
 )
 
 private val loraGoogleFont = GoogleFont("Lora")
-private val manropeGoogleFont = GoogleFont("Manrope")
+private val manropeGoogleFont = GoogleFont("Plus Jakarta Sans")
 
 val LoraFontFamily = FontFamily(
     Font(googleFont = loraGoogleFont, fontProvider = fontProvider, weight = FontWeight.Normal),
@@ -29,46 +29,41 @@ val ManropeFontFamily = FontFamily(
 )
 // Set of Material typography styles to start with
 val Typography = Typography(
-    headlineLarge = TextStyle(
+    headlineMedium = TextStyle(
         fontFamily = LoraFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 32.sp,
-        lineHeight = 40.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 28.sp,
+        lineHeight = 34.sp
     ),
-    headlineSmall = TextStyle(
+    titleLarge = TextStyle(
         fontFamily = LoraFontFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
         lineHeight = 26.sp
     ),
-    titleMedium = TextStyle(
-        fontFamily = LoraFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 22.sp
-    ),
-    bodyLarge = TextStyle(
+    titleSmall = TextStyle(
         fontFamily = ManropeFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 15.sp,
-        lineHeight = 22.sp
+        fontSize = 14.sp,
+        lineHeight = 20.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = ManropeFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,
-        lineHeight = 18.sp
+        fontWeight = FontWeight.Light,
+        fontSize = 14.sp,
+        lineHeight = 22.sp
     ),
-    labelLarge = TextStyle(
+    labelMedium = TextStyle(
         fontFamily = ManropeFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 13.sp,
-        lineHeight = 16.sp
-    ),
-    bodySmall = TextStyle(
-        fontFamily = ManropeFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Light,
         fontSize = 12.sp,
         lineHeight = 16.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = ManropeFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.66.sp
     )
 )

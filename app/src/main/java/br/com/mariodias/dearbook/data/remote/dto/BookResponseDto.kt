@@ -40,7 +40,10 @@ data class VolumeInfoDto(
     val pageCount: Int? = 0,
 
     @SerialName("imageLinks")
-    val bookCover: BookCoverDto? = BookCoverDto()
+    val bookCover: BookCoverDto? = BookCoverDto(),
+
+    @SerialName("averageRating")
+    val averageRating: Float = 0f
 )
 
 @Serializable

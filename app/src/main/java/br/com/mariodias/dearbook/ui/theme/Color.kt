@@ -15,3 +15,5 @@ val Momiji = Color(0xFFC1440E)
 val Asagi = Color(0xFF6E9C9E)
 
 val Ai = Color(0xFF4C6789)
+
+val Amber = Color(0xFFE59824)

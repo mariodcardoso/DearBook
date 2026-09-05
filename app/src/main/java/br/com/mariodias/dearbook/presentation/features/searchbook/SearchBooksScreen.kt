@@ -45,6 +45,7 @@ import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
 import br.com.mariodias.dearbook.presentation.components.ReadingStatusBottomSheet
 import br.com.mariodias.dearbook.ui.theme.Spacing
+import br.com.mariodias.dearbook.ui.theme.Sumi
 
 private val fakeBooks = listOf(
     Book(
@@ -147,7 +148,8 @@ fun SearchBookContent(
                 title = {
                     Text(
                         text = stringResource(R.string.search_screen_title),
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Sumi
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -182,7 +184,8 @@ fun SearchBookContent(
                 keyboardActions = KeyboardActions(onSearch = {
                     onSearch()
                     keyboardController?.hide()
-                })
+                }),
+                textStyle = MaterialTheme.typography.bodyLarge
             )
 
             when (uiState) {

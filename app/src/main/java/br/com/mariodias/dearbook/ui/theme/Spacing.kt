@@ -10,6 +10,6 @@ object Spacing {
     val xl = 24.dp
     val xxl = 32.dp
 
-    val screenHorizontal = 18.dp
+    val screenHorizontal = 20.dp
     val cardGap = 10.dp
 }

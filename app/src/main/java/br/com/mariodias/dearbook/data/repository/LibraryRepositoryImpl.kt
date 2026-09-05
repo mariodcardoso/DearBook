@@ -69,7 +69,8 @@ fun LibraryEntity.toDomain(): LibraryBook {
                 authors = listOf(author),
                 description = "",
                 pageCount = 0,
-                bookCover = BookCover(thumbnail = coverUrl)
+                bookCover = BookCover(thumbnail = coverUrl),
+                averageRating = 0f
             )
         ),
         readingStatus = status, isInLibrary = isInLibrary,
