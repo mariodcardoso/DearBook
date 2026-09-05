@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,11 +46,9 @@ fun ItemLibraryBookViewContent(libraryBook: LibraryBook, onClick: () -> Unit) {
             contentDescription = libraryBook.book.volumeInfo.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .aspectRatio(2f / 3f)
-                .padding(2.dp)
+                .aspectRatio(1f / 1.45f)
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(8.dp))
                 .clip(RoundedCornerShape(8.dp))
-
         )
 
         Box(modifier = Modifier.align(Alignment.TopEnd)) {
@@ -60,21 +57,18 @@ fun ItemLibraryBookViewContent(libraryBook: LibraryBook, onClick: () -> Unit) {
                 contentDescription = null,
                 tint = Washi,
                 modifier = Modifier
-                    .size(30.dp)
-                    .offset(x = (-2).dp, y = (-6).dp)
+                    .size(31.dp)
+                    .offset(x = (-1.5).dp, y = (-4.5).dp)
             )
             Icon(
                 imageVector = Icons.Filled.Bookmark,
                 contentDescription = null,
                 tint = getReadingStatusColor(libraryBook.readingStatus),
                 modifier = Modifier
-                    .size(26.dp)
-                    .offset(y = (-4).dp)
+                    .size(28.dp)
+                    .offset(y = (-3).dp)
             )
-
         }
-
-
     }
 }
 

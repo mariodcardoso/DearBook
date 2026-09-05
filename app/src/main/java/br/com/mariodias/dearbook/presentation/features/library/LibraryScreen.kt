@@ -2,19 +2,24 @@ package br.com.mariodias.dearbook.presentation.features.library
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,6 +33,9 @@ import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.ui.theme.Matcha
+import br.com.mariodias.dearbook.ui.theme.Sumi
+import br.com.mariodias.dearbook.ui.theme.Uguisu
 
 @Composable
 fun LibraryScreen(
@@ -48,50 +56,87 @@ fun LibraryContent(
 ) {
 
     Scaffold(
-        modifier = modifier,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = "") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
-        }
+        modifier = modifier
     ) { innerPadding ->
 
-        when (uiState) {
-            LibraryUiState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(64.dp)
-                            .align(Alignment.Center)
-                    )
-                }
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(20.dp)
+        ) {
+
+            Text(
+                text = "My Library",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Sumi
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = "12 books collected",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Uguisu
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Circle,
+                    contentDescription = null,
+                    tint = Uguisu,
+                    modifier = Modifier
+                        .padding(horizontal = 6.dp)
+                        .size(5.dp)
+                )
+
+                Text(
+                    text = "2 books reading",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Matcha,
+                )
             }
 
-            LibraryUiState.Empty -> { /* Text de "estante vazia" */ }
+            Spacer(modifier = Modifier.height(24.dp))
 
-            is LibraryUiState.Success -> {
-                Box(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(horizontal = 18.dp)
-                ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 96.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxSize()
+            when (uiState) {
+                LibraryUiState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(64.dp)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
 
-                    ) {
+                LibraryUiState.Empty -> { /* Text de "estante vazia" */ }
 
-                        items(uiState.books, key = { it.book.id }) { libraryBook ->
-                            ItemLibraryBookView(
-                                libraryBook,
-                                onClick = { onBookClick(libraryBook.book.id) })
+                is LibraryUiState.Success -> {
+
+                    Text(
+                        text = "All books",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Sumi
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Box {
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 96.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+
+                            items(uiState.books, key = { it.book.id }) { libraryBook ->
+                                ItemLibraryBookView(
+                                    libraryBook,
+                                    onClick = { onBookClick(libraryBook.book.id) })
+                            }
+
                         }
-
                     }
                 }
             }
