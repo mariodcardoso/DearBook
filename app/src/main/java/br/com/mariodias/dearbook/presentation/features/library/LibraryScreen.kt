@@ -1,5 +1,6 @@
 package br.com.mariodias.dearbook.presentation.features.library
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -33,7 +37,12 @@ import br.com.mariodias.dearbook.domain.model.BookCover
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.domain.model.LibraryBook
 import br.com.mariodias.dearbook.domain.model.VolumeInfo
+import br.com.mariodias.dearbook.presentation.getReadingStatusColor
+import br.com.mariodias.dearbook.presentation.getReadingStatusIcon
+import br.com.mariodias.dearbook.presentation.getStatusText
+import br.com.mariodias.dearbook.ui.theme.Kinari
 import br.com.mariodias.dearbook.ui.theme.Matcha
+import br.com.mariodias.dearbook.ui.theme.Spacing
 import br.com.mariodias.dearbook.ui.theme.Sumi
 import br.com.mariodias.dearbook.ui.theme.Uguisu
 
@@ -44,7 +53,16 @@ fun LibraryScreen(
     onBookClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    LibraryContent(modifier, uiState, onBookClick)
+
+    val selectedStatus by viewModel.selectedStatus.collectAsStateWithLifecycle()
+
+    LibraryContent(
+        modifier,
+        uiState,
+        selectedStatus,
+        viewModel::onFilterClick,
+        onBookClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +70,8 @@ fun LibraryScreen(
 fun LibraryContent(
     modifier: Modifier = Modifier,
     uiState: LibraryUiState,
+    selectedStatus: BookReadingStatus?,
+    onFilterClick: (BookReadingStatus) -> Unit,
     onBookClick: (String) -> Unit
 ) {
 
@@ -113,6 +133,40 @@ fun LibraryContent(
                 LibraryUiState.Empty -> { /* Text de "estante vazia" */ }
 
                 is LibraryUiState.Success -> {
+
+                    Row {
+                        BookReadingStatus.entries.forEach { status ->
+                            val statusColor = getReadingStatusColor(status)
+                            var isSelected = status == selectedStatus
+
+                            FilterChip(
+                                onClick = {
+
+                                    onFilterClick(status)
+                                },
+                                label = { Text(text = stringResource(getStatusText(status))) },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = getReadingStatusIcon(status),
+                                        contentDescription = null,
+                                        tint = statusColor
+                                    )
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = statusColor.copy(alpha = 0.2f),
+                                    selectedLabelColor = Sumi
+                                ),
+                                selected = isSelected,
+                                modifier = Modifier.padding(horizontal = Spacing.xs),
+                                border = BorderStroke(
+                                    width = 1.dp,
+                                    color = if (isSelected) statusColor else Kinari
+                                )
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text = "All books",
@@ -211,7 +265,12 @@ fun LibraryContentSuccessPreview() {
         )
     )
 
-    LibraryContent(Modifier, LibraryUiState.Success(books), onBookClick = {})
+    LibraryContent(
+        Modifier,
+        LibraryUiState.Success(books),
+        null,
+        onFilterClick = {},
+        onBookClick = {})
 
 
 }
