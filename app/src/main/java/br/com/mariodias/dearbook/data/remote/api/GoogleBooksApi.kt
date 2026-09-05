@@ -11,6 +11,7 @@ interface GoogleBooksApi {
     @GET("volumes")
     suspend fun getBookList(
         @Query("q") query: String,
+        @Query("orderBy") orderBy: String = "relevance",
         @Query("maxResults") maxResults: Int = 20
     ): BookResponseDto
 

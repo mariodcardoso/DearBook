@@ -2,8 +2,12 @@ package br.com.mariodias.dearbook.presentation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -46,9 +50,18 @@ fun getStatusText(readingStatus: BookReadingStatus?): Int {
 
 fun getReadingStatusIcon(readingStatus: BookReadingStatus?): ImageVector {
     return when(readingStatus) {
-        BookReadingStatus.TO_READ -> Icons.Default.BookmarkBorder
+        BookReadingStatus.TO_READ -> Icons.Filled.Bookmark
+        BookReadingStatus.READING -> Icons.Filled.MenuBook
+        BookReadingStatus.READ -> Icons.Filled.CheckCircle
+        else -> Icons.Default.AddCircleOutline
+    }
+}
+
+fun getReadingStatusOutlinedIcon(readingStatus: BookReadingStatus?): ImageVector {
+    return when (readingStatus) {
+        BookReadingStatus.TO_READ -> Icons.Outlined.BookmarkBorder
         BookReadingStatus.READING -> Icons.Outlined.MenuBook
-        BookReadingStatus.READ -> Icons.Default.CheckCircleOutline
+        BookReadingStatus.READ -> Icons.Outlined.CheckCircle
         else -> Icons.Default.AddCircleOutline
     }
 }

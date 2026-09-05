@@ -20,7 +20,7 @@ class BookRepositoryImpl @Inject constructor(
 
     override suspend fun searchBooks(title: String): Resource<BookResponse> {
         return try {
-            Resource.Success(api.getBookList(title).toDomain())
+            Resource.Success(api.getBookList("intitle:$title").toDomain())
         } catch (e: Exception) {
             Resource.Error(e)
         }

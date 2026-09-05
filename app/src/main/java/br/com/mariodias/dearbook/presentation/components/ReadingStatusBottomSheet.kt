@@ -37,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.presentation.getReadingStatusColor
+import br.com.mariodias.dearbook.presentation.getReadingStatusIcon
+import br.com.mariodias.dearbook.presentation.getReadingStatusOutlinedIcon
 import br.com.mariodias.dearbook.presentation.getStatusText
 import br.com.mariodias.dearbook.ui.theme.Kinari
 import br.com.mariodias.dearbook.ui.theme.Momiji
@@ -147,7 +149,7 @@ fun ItemBottomSheetView(
     ) {
 
         Icon(
-            imageVector = if (isSelected) Icons.Filled.Bookmark else Icons.Default.BookmarkBorder,
+            imageVector = if (isSelected) getReadingStatusIcon(readingStatusSelected) else getReadingStatusOutlinedIcon(readingStatus),
             contentDescription = null,
             modifier = Modifier.size(36.dp),
             tint = statusColor
