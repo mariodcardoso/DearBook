@@ -18,4 +18,5 @@
     <string name="reading">Reading</string>
     <string name="read">Read</string>
     <string name="not_in_library">Add to Library</string>
+    <string name="library_title_my_library">My Library</string>
 </resources>

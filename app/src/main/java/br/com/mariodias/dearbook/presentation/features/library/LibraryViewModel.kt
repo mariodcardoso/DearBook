@@ -33,8 +33,9 @@ class LibraryViewModel @Inject constructor(
             books.filter { book -> book.readingStatus == selectedStatus }
         }
 
-        if (books.isEmpty()) LibraryUiState.Empty else LibraryUiState.Success(filteredBooks)
+        val quantityByStatus = getQuantityByStatus(books)
 
+        if (books.isEmpty()) LibraryUiState.Empty else LibraryUiState.Success(filteredBooks, quantityByStatus)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -42,13 +43,27 @@ class LibraryViewModel @Inject constructor(
     )
 
 
-    fun onFilterClick(selectedStatus: BookReadingStatus) {
+    fun onFilterClick(selectedStatus: BookReadingStatus?) {
         _selectedStatus.value = if (_selectedStatus.value == selectedStatus) null else selectedStatus
+    }
+
+    fun getQuantityByStatus(books: List<LibraryBook>): Map<BookReadingStatus, Int> {
+        val quantityByStatus = mutableMapOf<BookReadingStatus, Int>()
+
+        BookReadingStatus.entries.forEach { readingStatus ->
+            val quantity = books.filter { book -> book.readingStatus == readingStatus }.size
+            quantityByStatus[readingStatus] = quantity
+        }
+
+        return quantityByStatus
     }
 }
 
 sealed interface LibraryUiState {
     object Loading : LibraryUiState
     object Empty : LibraryUiState
-    data class Success(val books: List<LibraryBook>) : LibraryUiState
+    data class Success(
+        val books: List<LibraryBook>,
+        val quantityByStatus: Map<BookReadingStatus, Int>
+    ) : LibraryUiState
 }
