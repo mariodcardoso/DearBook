@@ -31,18 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.mariodias.dearbook.R
+import br.com.mariodias.dearbook.domain.model.BookReadingStatus
 import br.com.mariodias.dearbook.ui.theme.Kinari
 import br.com.mariodias.dearbook.ui.theme.Sumi
 import br.com.mariodias.dearbook.ui.theme.Surface
 import br.com.mariodias.dearbook.ui.theme.Tsutsuji
 import br.com.mariodias.dearbook.ui.theme.Uguisu
-import coil3.compose.AsyncImage
 
 @Composable
 fun ReadingStatusTile() {
@@ -65,7 +61,6 @@ fun ReadingStatusTile() {
         }
     }
 }
-
 
 @Composable
 private fun ReadingStatusHeader() {
@@ -90,20 +85,6 @@ private fun ReadingStatusHeader() {
         )
 
         Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = "#1 in line",
-            style = MaterialTheme.typography.labelMedium,
-            color = Tsutsuji,
-            modifier = Modifier
-                .background(
-                    color = Tsutsuji.copy(alpha = 0.12f),
-                    shape = RoundedCornerShape(100)
-                )
-                .padding(horizontal = 14.dp, vertical = 8.dp)
-        )
-
-        Spacer(modifier = Modifier.width(4.dp))
 
         AssistChip(
             onClick = {},
@@ -131,7 +112,6 @@ private fun ReadingStatusHeader() {
         )
 
     }
-
 }
 
 @Composable
@@ -165,17 +145,13 @@ private fun BookInfoRow() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        AsyncImage(
-            model = "",
-            contentDescription = stringResource(R.string.book_cover_description),
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            error = painterResource(R.drawable.ic_launcher_background),
-            contentScale = ContentScale.Crop,
+        ImageBookCover(
             modifier = Modifier
                 .width(80.dp)
                 .aspectRatio(66f / 106f)
                 .shadow(10.dp)
-                .clip(shape = RoundedCornerShape(8, 13, 13, 8))
+                .clip(shape = RoundedCornerShape(8, 13, 13, 8)),
+            showRibbonStatus = BookReadingStatus.TO_READ
         )
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
@@ -192,7 +168,6 @@ private fun BookInfoRow() {
 
         }
     }
-
 }
 
 @Composable
@@ -225,5 +200,4 @@ fun ReadingStatusTilePreview() {
     ) {
         ReadingStatusTile()
     }
-
 }
