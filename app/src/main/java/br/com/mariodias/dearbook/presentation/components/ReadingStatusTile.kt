@@ -1,7 +1,12 @@
 package br.com.mariodias.dearbook.presentation.components
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,8 +31,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -64,6 +72,9 @@ fun ReadingStatusTile() {
 
 @Composable
 private fun ReadingStatusHeader() {
+
+    val dotAlpha by rememberBlinkingAlpha()
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -72,8 +83,10 @@ private fun ReadingStatusHeader() {
         Icon(
             imageVector = Icons.Filled.Circle,
             contentDescription = "Filter",
-            modifier = Modifier.size(6.dp),
-            tint = Tsutsuji
+            tint = Tsutsuji,
+            modifier = Modifier
+                .size(7.dp)
+                .alpha(dotAlpha)
         )
 
         Spacer(modifier = Modifier.width(6.dp))
@@ -112,6 +125,17 @@ private fun ReadingStatusHeader() {
         )
 
     }
+}
+
+@Composable
+private fun rememberBlinkingAlpha(): State<Float> {
+    val transition = rememberInfiniteTransition(label = "dot-blink")
+    return transition.animateFloat(
+        initialValue = 1f, targetValue = 0.2f, animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ), label = "dot-alpha"
+    )
 }
 
 @Composable

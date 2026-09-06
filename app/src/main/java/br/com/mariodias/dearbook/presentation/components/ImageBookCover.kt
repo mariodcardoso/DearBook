@@ -22,13 +22,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.mariodias.dearbook.R
 import br.com.mariodias.dearbook.domain.model.BookReadingStatus
-import br.com.mariodias.dearbook.ui.theme.Tsutsuji
+import br.com.mariodias.dearbook.presentation.getReadingStatusColor
 import br.com.mariodias.dearbook.ui.theme.Washi
 import coil3.compose.AsyncImage
 
 @Composable
 fun ImageBookCover(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     image: String = "",
     showRibbonStatus: BookReadingStatus? = null
 ) {
@@ -55,7 +55,7 @@ fun ImageBookCover(
                 Icon(
                     imageVector = Icons.Filled.Bookmark,
                     contentDescription = null,
-                    tint = Tsutsuji,
+                    tint = getReadingStatusColor(showRibbonStatus),
                     modifier = Modifier
                         .size(28.dp)
                         .offset(y = (-3).dp)
