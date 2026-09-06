@@ -1,55 +1,63 @@
 package br.com.mariodias.dearbook.presentation.features.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.mariodias.dearbook.R
-import br.com.mariodias.dearbook.presentation.components.ReadingStatusTile
-import br.com.mariodias.dearbook.ui.theme.Ai
+import br.com.mariodias.dearbook.presentation.components.HomeReadingTile
+import br.com.mariodias.dearbook.presentation.components.HomeToReadTile
+import br.com.mariodias.dearbook.ui.theme.Sumi
+import br.com.mariodias.dearbook.ui.theme.Uguisu
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier = Modifier) {
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+    Scaffold(modifier = modifier) { innerPadding ->
 
-        Box(
-            Modifier.padding(20.dp),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(20.dp)
+                .fillMaxSize(),
         ) {
-            ReadingStatusTile()
+
+            Header()
+
+            Spacer(Modifier.height(20.dp))
+
+            HomeReadingTile()
+
+            Spacer(Modifier.height(20.dp))
+
+            HomeToReadTile()
+
+            Spacer(Modifier.height(50.dp))
         }
+    }
+}
 
-        Spacer(Modifier.height(100.dp))
-
-        Image(
-            painter = painterResource(R.drawable.penguin),
-            contentDescription = null,
-            alpha = 0.8f
+@Composable
+private fun Header() {
+    Column {
+        Text(
+            text = "Wednesday, august 15".uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = Uguisu
         )
 
         Text(
-            text = "Coming soon...",
-            style = MaterialTheme.typography.headlineLarge,
-            color = Ai
+            text = "Good morning, Mário",
+            style = MaterialTheme.typography.headlineMedium,
+            color = Sumi
         )
-
     }
 }

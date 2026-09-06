@@ -18,5 +18,19 @@
     <string name="reading">Reading</string>
     <string name="read">Read</string>
     <string name="not_in_library">Add to Library</string>
-    <string name="library_title_my_library">My Library</string>
+    <string name="library_title_my_library">My Bookshelf</string>
+
+    <!--    Home Screen    -->
+
+    <!--    To Read    -->
+    <string name="home_tile_to_read_header_status">Up to Next</string>
+    <string name="home_tile_to_read_chip_text">Manage queue</string>
+    <string name="home_tile_to_read_footer_added_message">Added 3 days ago</string>
+    <string name="home_tile_to_read_footer_start_reading">Start reading</string>
+
+    <!--    Reading    -->
+    <string name="home_tile_reading_header_status">Reading</string>
+    <string name="home_tile_reading_chip_text">Goal: 15 pages/day</string>
+    <string name="home_tile_reading_footer_added_message">Read 5 days ago</string>
+    <string name="home_tile_reading_footer_log_pages">Log pages</string>
 </resources>

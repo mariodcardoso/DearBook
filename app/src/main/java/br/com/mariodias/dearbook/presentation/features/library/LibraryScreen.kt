@@ -81,9 +81,7 @@ fun LibraryContent(
     onBookClick: (String) -> Unit
 ) {
 
-    Scaffold(
-        modifier = modifier
-    ) { innerPadding ->
+    Scaffold(modifier = modifier) { innerPadding ->
 
         Column(
             modifier = Modifier
@@ -302,7 +300,7 @@ fun LibraryContentSuccessPreview() {
         LibraryUiState.Success(books, quantityByStatus),
         null,
         onFilterClick = {},
-        onBookClick = {})
-
+        onBookClick = {}
+    )
 
 }
