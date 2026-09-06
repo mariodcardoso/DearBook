@@ -35,6 +35,12 @@ val Typography = Typography(
         fontSize = 28.sp,
         lineHeight = 34.sp
     ),
+    headlineSmall = TextStyle(
+        fontFamily = LoraFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 24.sp,
+        lineHeight = 34.sp
+    ),
     titleLarge = TextStyle(
         fontFamily = LoraFontFamily,
         fontWeight = FontWeight.SemiBold,
@@ -43,7 +49,7 @@ val Typography = Typography(
     ),
     titleSmall = TextStyle(
         fontFamily = ManropeFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp
     ),
@@ -51,6 +57,12 @@ val Typography = Typography(
         fontFamily = ManropeFontFamily,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
+        lineHeight = 22.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = ManropeFontFamily,
+        fontWeight = FontWeight.Light,
+        fontSize = 12.sp,
         lineHeight = 22.sp
     ),
     labelMedium = TextStyle(
